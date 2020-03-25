@@ -116,7 +116,7 @@ class Car{
             a *= -1;
             //b *= -1;
         }
-        console.log(a + ' ' + b);
+        //console.log(a + ' ' + b);
         this.car_direction = new Vector2D(a, b);
     }
  
