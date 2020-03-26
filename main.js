@@ -1,29 +1,23 @@
-var car;
+var game;
 
 function setup(){
-    createCanvas(800, 800);
-    car = new Car(new Vector2D(40, 40), 0);
-
+    createCanvas(1200, 800);
     rectMode(CENTER);
     angleMode(DEGREES);
+
+    game = new Game(1);
 }
 
 function draw(){
-    background(174,171,171);
-    car.draw();
-    car.update(keys);
+    game.draw();
+    game.update(keys);
 }
 
+// input
 var keys = {}
 document.onkeydown = function(e){
-    (e.key == " ") ?
-        keys['Space'] = true
-    :
-        keys[e.key] = true;
+    (e.key == " ") ? keys['Space'] = true : keys[e.key] = true;
 }
 document.onkeyup = function(e){
-    (e.key == " ") ?
-        keys['Space'] = false
-    :
-        keys[e.key] = false;
+    (e.key == " ") ? keys['Space'] = false : keys[e.key] = false;
 }
