@@ -1,4 +1,4 @@
-class Car extends ColidableSprite {
+class Car extends CollidableSprite {
 
     constructor(position, angle){
         super(position);
@@ -17,15 +17,14 @@ class Car extends ColidableSprite {
     }
 
     draw() {
-        fill(255, 0, 0);
-        push()
+        push();
         stroke('black');
+        fill(255, 0, 0);
         translate(this.position.X + this.size.X, this.position.Y + this.size.Y);
         rotate(this.steer_angle)
         rect(0, 0, this.size.X, this.size.Y);
-        pop()
-        
-        
+        noFill();
+        pop();
     }
 
     update(keys){
