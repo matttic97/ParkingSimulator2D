@@ -1,4 +1,4 @@
-class ColidableSprite{
+class CollidableSprite{
 
     constructor(position, poligon){
         this.position = position;
