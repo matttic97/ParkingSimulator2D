@@ -17,11 +17,15 @@ class Car extends ColidableSprite {
     }
 
     draw() {
+        fill(255, 0, 0);
+        push()
         stroke('black');
         translate(this.position.X + this.size.X, this.position.Y + this.size.Y);
         rotate(this.steer_angle)
         rect(0, 0, this.size.X, this.size.Y);
-        fill(255, 0, 0);
+        pop()
+        
+        
     }
 
     update(keys){
