@@ -2,6 +2,7 @@ class Game{
 
     constructor(level){
         this.level = level;
+        this.WallManeger = new WallManeger();
 
         this.car = new Car(new Vector2D(650, 100), 0);
 
@@ -24,10 +25,12 @@ class Game{
             spot.draw();
         
         this.car.draw();
+        this.WallManeger.draw()
     }
 
     update(keys){
         this.car.update(keys);
+        this.WallManeger.update();
     }
 
 

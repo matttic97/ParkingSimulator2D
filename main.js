@@ -9,8 +9,8 @@ function setup(){
 }
 
 function draw(){
-    game.draw();
     game.update(keys);
+    game.draw();
 }
 
 // input
