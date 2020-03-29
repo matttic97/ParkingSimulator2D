@@ -3,7 +3,10 @@ class Game{
     constructor(level){
         this.level = level;
         this.WallManeger = new WallManeger();
-        this.ParkingSpotManeger=new ParkingSpotManeger();
+        console.log(height);
+        this.WallManeger.createAxisWall('x', new Vector2D(400, 600), 6);
+        this.ParkingSpotManeger = new ParkingSpotManeger();
+        this.ParkingSpotManeger.createMultiplePargingSpots();
         this.car = new Car(new Vector2D(650, 100), 0);
     }
 
@@ -11,7 +14,6 @@ class Game{
         background(174, 171, 171);
         this.ParkingSpotManeger.draw()
         this.car.draw();
-        this.WallManeger.draw()
     }
 
     update(keys){

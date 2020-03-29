@@ -11,11 +11,11 @@ class Wall extends CollidableSprite{
         push()
         fill(color[0],color[1],color[2])
         stroke('black');
-        translate(this.position.X + this.size.X, this.position.Y + this.size.Y);
-        rotate(this.StartAngle)
-        rect(0, 0, this.size.X, this.size.Y);
+        // translate(this.position.X + this.size.X / 2, this.position.Y + this.size.Y / 2);
+        // rotate(this.StartAngle)
+        rect(this.position.X, this.position.Y, Wall.SIZE, Wall.SIZE);
         noFill();
-        pop()
+        pop();
         
     }
 
