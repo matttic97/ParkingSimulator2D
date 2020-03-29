@@ -1,14 +1,15 @@
 class Wall extends CollidableSprite{
-    constructor(position,size,angle){
+    constructor(position,size,angle,color){
         super(position)
         this.position = position;
         this.size = size;
+        this.color=color;
         this.StartAngle = angle;
     }
 
     draw() {
         push()
-        fill(0,255,0)
+        fill(color[0],color[1],color[2])
         stroke('black');
         translate(this.position.X + this.size.X, this.position.Y + this.size.Y);
         rotate(this.StartAngle)

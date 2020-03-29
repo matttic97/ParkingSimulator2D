@@ -9,13 +9,13 @@ class Game{
 
     draw(){
         background(174, 171, 171);
-      this.ParkingSpotManeger.draw()
+        this.ParkingSpotManeger.draw()
         this.car.draw();
         this.WallManeger.draw()
     }
 
     update(keys){
-         this.ParkingSpotManeger.update()
+        this.ParkingSpotManeger.update()
         this.car.update(keys);
         this.WallManeger.update();
     }
