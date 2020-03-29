@@ -20,7 +20,7 @@ class ParkingSpot extends CollidableSprite {
     draw(){
         push();
 
-        translate(this.position.X, this.position.Y + this.line_width / 2);
+        translate(this.position.X, this.position.Y);
         rotate((this.qadrant - 1) * 90);
 
         noStroke(); 
