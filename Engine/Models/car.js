@@ -20,9 +20,9 @@ class Car extends CollidableSprite {
         push();
         fill(255, 0, 0);
         stroke('black');   
-        translate(this.position.X + this.size.X, this.position.Y + this.size.Y);
+        translate(this.position.X, this.position.Y);
         rotate(this.steer_angle)
-        rect(0, 0, this.size.X, this.size.Y);
+        rect(0,0, this.size.X, this.size.Y);
         noFill();
         pop();
     }
