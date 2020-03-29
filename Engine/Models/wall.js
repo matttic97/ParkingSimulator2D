@@ -1,4 +1,4 @@
-class Wall extends ColidableSprite{
+class Wall extends CollidableSprite{
     constructor(position,size,angle){
         super(position)
         this.position = position;
@@ -7,12 +7,13 @@ class Wall extends ColidableSprite{
     }
 
     draw() {
-        fill(0,255,0)
         push()
+        fill(0,255,0)
         stroke('black');
         translate(this.position.X + this.size.X, this.position.Y + this.size.Y);
         rotate(this.StartAngle)
         rect(0, 0, this.size.X, this.size.Y);
+        noFill();
         pop()
         
     }
@@ -24,30 +25,5 @@ class Wall extends ColidableSprite{
  
     getCenter(){
         return new Vector2D(this.position.X + this.size.X/2, this.position.Y + this.size.Y/2)
-    }
-}
-
-
-
-class WallManeger{
-    constructor(){
-        this.wallNumber = 5;
-        this.WallsArray=[]
-        for (let i=0;i<=this.wallNumber;i++){
-            this.WallsArray[i]= new Wall(new Vector2D(60*i,60*i),new Vector2D(50,50),5*i);
-        }
-    }
-
-    draw() {
-        for(let i=0;i<=this.wallNumber;i++){
-            this.WallsArray[i].draw()
-        }
-    }
-
-    update(){
-    
-         for(let i=0;i<=this.wallNumber;i++){
-            this.WallsArray[i].update()
-        }
     }
 }
