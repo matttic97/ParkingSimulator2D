@@ -1,29 +1,30 @@
 class Game{
 
     constructor(level){
-        this.level = level;
         this.WallManeger = new WallManeger();
-        console.log(height);
-        this.WallManeger.createAxisWall('x', new Vector2D(400, 600), 6);
         this.ParkingSpotManeger = new ParkingSpotManeger();
-        this.ParkingSpotManeger.createMultiplePargingSpots();
-        this.car = new Car(new Vector2D(650, 100), 0);
+        this.CarManeger=new CarManeger();
+
+
+
+        this.MapManeger= new MapManeger(this)
+        /*Map manegerju moramo dat objekt od Game, da lahko pol spawna objecte v tem Game classu,
+        ker MapManeger samo creata map, drawa pa ga Game class*/
+       this.MapManeger.createMap(0);
+
     }
 
     draw(){
         background(174, 171, 171);
-
-        this.ParkingSpotManeger.draw()
+        this.ParkingSpotManeger.draw();
         this.WallManeger.draw();
-
-        this.car.draw();
+        this.CarManeger.draw();
     }
 
     update(keys){
         this.ParkingSpotManeger.update()
+        this.CarManeger.update(keys);
         this.WallManeger.update();
-        
-        this.car.update(keys);
     }
 
 
