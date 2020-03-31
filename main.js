@@ -6,6 +6,7 @@ const canvasHeight=800;
 function setup(){
     gameCanvas=createCanvas(canvasWidth, canvasHeight);
     gameCanvas.id("gameCanvas");
+    pixelDensity(1);
     rectMode(CENTER);
     angleMode(DEGREES);
 
