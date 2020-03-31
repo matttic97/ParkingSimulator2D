@@ -1,9 +1,11 @@
 var game;
+let gameCanvas;
 const canvasWidth=1200;
 const canvasHeight=800;
 
 function setup(){
-    createCanvas(canvasWidth, canvasHeight);
+    gameCanvas=createCanvas(canvasWidth, canvasHeight);
+    gameCanvas.id("gameCanvas");
     rectMode(CENTER);
     angleMode(DEGREES);
 

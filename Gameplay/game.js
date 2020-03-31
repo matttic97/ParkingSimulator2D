@@ -7,10 +7,10 @@ class Game{
 
 
 
-        this.MapManeger= new MapManeger(this)
+        this.MapManeger= new MapManeger(this,"././Gameplay/LevelMap/level1.bmp",120,80);
         /*Map manegerju moramo dat objekt od Game, da lahko pol spawna objecte v tem Game classu,
         ker MapManeger samo creata map, drawa pa ga Game class*/
-       this.MapManeger.createMap(0);
+     
 
     }
 
