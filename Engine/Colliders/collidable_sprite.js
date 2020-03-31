@@ -10,6 +10,11 @@ class CollidableSprite{
         this.setEdges();
     }
 
+    setCollider(){
+        this.setPoints();
+        this.setEdges();
+
+    }
     setPoints(){
         let size = new Vector2D(this.size.X, this.size.Y);
         size.devide(2);

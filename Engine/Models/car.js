@@ -40,14 +40,10 @@ class Car extends CollidableSprite {
         this.adjustSteerPower();
         this.move(keys);
         this.setCarDirection();  
-
         this.velocity = new Vector2D(this.car_direction.X, this.car_direction.Y);
-
         this.position.add(this.velocity);
-
-        super.setPoints();
-        super.setEdges();
         
+        super.setCollider()
         this.color = 'red';
         this.checkCollision(walls);
 
@@ -133,6 +129,12 @@ class Car extends CollidableSprite {
 
     checkCollision(colliders){
         colliders.map( (collider) => this.collision(collider));
+    }
+    collisionEvent(withObj){
+        this.color="white"
+        this.speed=-4*this.gear
+
+
     }
 
     stop(){

@@ -23,8 +23,16 @@ class Collider {
                 return;
             }
         }
-
-        a.color = 'white';
+         if (typeof a.collisionEvent === 'function')
+        {
+            a.collisionEvent(b);
+        }
+        /*
+             if (typeof b.collisionEvent === 'function')
+        {
+            b.collisionEvent(a);
+        }
+*/
     }
 
     static pointProjection(points, axis){
