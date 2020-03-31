@@ -14,6 +14,13 @@ class Matrix {
       }
       return m;
     }
+
+    static getRotationMatrix(angle){
+      return [
+        [math.cos(math.unit(angle, 'deg')), -math.sin(math.unit(angle, 'deg'))],
+        [math.sin(math.unit(angle, 'deg')), math.cos(math.unit(angle, 'deg'))]
+      ];
+    }
   
     static fromArray(arr) {
       return new Matrix(arr.length, 1).map((e, i) => arr[i]);

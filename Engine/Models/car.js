@@ -1,12 +1,12 @@
 class Car extends CollidableSprite {
 
-    constructor(position, angle){
-        super(position);
+    constructor(position, angle, drivable){
+        super(position, 'rect', new Vector2D(100, 50), angle);
 
-        this.size = new Vector2D(100, 50);
-        this.steer_angle = angle;
-        this.steer_angle_power=0;
-        this.steer_angle_max_power=1.6;
+        this.drivable = drivable;
+
+        this.angle_power = 0;
+        this.angle_max_power = 1.6;
         this.velocity = Vector2D.zeros();
         this.car_direction = Vector2D.zeros();
         this.gear = 0;  // -1=reverse, 0=neutral, 1=forward
@@ -15,26 +15,42 @@ class Car extends CollidableSprite {
         this.brakeFriction=0.6;
         this.speed = 0;
         this.maxspeed = 5;
+        
+        // for testing ->
+        this.color = 'red';
     }
+
+    
 
     draw() {
         push();
-        fill(255, 0, 0);
+        fill(this.color);
         stroke('black');   
         translate(this.position.X, this.position.Y);
-        rotate(this.steer_angle)
+        rotate(this.angle)
         rect(0,0, this.size.X, this.size.Y);
         noFill();
         pop();
     }
 
-    update(keys){
+    update(keys, walls){
+        if(!this.drivable)
+            return;
+
         this.adjustSteerPower();
         this.move(keys);
         this.setCarDirection();  
 
         this.velocity = new Vector2D(this.car_direction.X, this.car_direction.Y);
+
         this.position.add(this.velocity);
+
+        super.setPoints();
+        super.setEdges();
+        
+        this.color = 'red';
+        this.checkCollision(walls);
+
     }
 
     move(keys){   
@@ -57,16 +73,16 @@ class Car extends CollidableSprite {
     moveLeft(){
         if(math.abs(this.speed) > 0){
             switch(this.gear){
-                case 1: this.steer_angle-=this.steer_angle_power; break;
-                case -1: this.steer_angle+=this.steer_angle_power; break;
+                case 1: this.angle-=this.angle_power; break;
+                case -1: this.angle+=this.angle_power; break;
             }
         }
     }
     moveRight(){
         if(math.abs(this.speed) > 0){
             switch(this.gear){
-                case 1: this.steer_angle+=this.steer_angle_power; break;
-                case -1: this.steer_angle-=this.steer_angle_power; break;
+                case 1: this.angle+=this.angle_power; break;
+                case -1: this.angle-=this.angle_power; break;
             }
         }
     }
@@ -82,22 +98,21 @@ class Car extends CollidableSprite {
     }
     
     setCarDirection(){
-        let a = math.cos(math.unit(this.steer_angle, 'deg')) * this.gear * this.speed;
-        let b = math.sin(math.unit(this.steer_angle, 'deg')) * this.speed;
+        let a = math.cos(math.unit(this.angle, 'deg')) * this.gear * this.speed;
+        let b = math.sin(math.unit(this.angle, 'deg')) * this.speed;
         if(this.gear < 0)  a *= -1;
 
         this.car_direction = new Vector2D(a, b);
     }
 
     decelerate(){
-     if (this.speed > 0){
-        this.speed -= this.friction;
-     }
-     else if(this.speed<0){
-        this.speed += this.friction;
-     }
-    if(math.abs(this.speed) <= this.friction)
-        this.speed = 0;
+        if (this.speed > 0)
+            this.speed -= this.friction;
+        else if(this.speed<0)
+            this.speed += this.friction;
+
+        if(math.abs(this.speed) <= this.friction)
+            this.speed = 0;
     }
 
     brake(){
@@ -109,17 +124,19 @@ class Car extends CollidableSprite {
          }
         if(math.abs(this.speed) <= this.friction)
             this.speed = 0;
-
-
-
     }
+
     adjustSteerPower(){
-        this.steer_angle_power=this.steer_angle_max_power*(1-math.exp(-5*math.abs(this.speed)/this.maxspeed))
-
-
+        this.angle_power = this.angle_max_power * (1 - math.exp(-5 * math.abs(this.speed) / this.maxspeed));
     }
+
+
     checkCollision(colliders){
         colliders.map( (collider) => this.collision(collider));
+    }
+
+    stop(){
+        this.velocity = Vector2D.zeros();
     }
 
 }
