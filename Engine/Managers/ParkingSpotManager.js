@@ -1,4 +1,4 @@
-class ParkingSpotManeger{
+class ParkingSpotManager{
     constructor(){
         this.parkingSpotsArray = [];
         this.parkingSpotIndex = 0;

@@ -1,11 +1,11 @@
-class CarManeger{
+class CarManager{
     constructor(){
         this.CarsArray=[];
         this.CarIndex=0;
     }
 
     createCar(position,angle){
-        this.CarsArray[this.CarIndex]= new Car(position,angle);
+        this.CarsArray[this.CarIndex] = new Car(position, angle, false);
         this.CarIndex++;
     }
 

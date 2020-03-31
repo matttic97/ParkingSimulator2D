@@ -1,11 +1,12 @@
-class WallManeger{
+class WallManager{
+
     constructor(){
         this.WallsArray=[];
         this.wallIndex=0;
     }
 
-    createWall(position,size,angle){
-        this.WallsArray[this.wallIndex]= new Wall(position,size,angle);
+    createWall(position, size, angle){
+        this.WallsArray[this.wallIndex] = new Wall(position, size, angle);
         this.wallIndex++;
     }
 
