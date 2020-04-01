@@ -27,12 +27,12 @@ class Collider {
         {
             a.collisionEvent(b);
         }
-        /*
+        
              if (typeof b.collisionEvent === 'function')
         {
             b.collisionEvent(a);
         }
-*/
+
     }
 
     static pointProjection(points, axis){

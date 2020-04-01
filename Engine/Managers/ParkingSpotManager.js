@@ -1,31 +1,24 @@
-class ParkingSpotManager{
-    constructor(){
-        this.parkingSpotsArray = [];
-        this.parkingSpotIndex = 0;
+class ParkingspotManager{
+    constructor(gameObject){
+        this.parkingspotsArray = [];
+        this.parkingspotIndex = 0;
+        this.gameObject=gameObject
     }
 
-    createMultiplePargingSpots(){
-        this.createParkingSpot(new Vector2D(200, 20), 1, true);
-        this.createParkingSpot(new Vector2D(200, 110), 1, false);
-        this.createParkingSpot(new Vector2D(200, 290), 1, false);
-        this.createParkingSpot(new Vector2D(200, 380), 1, true);
-        this.createParkingSpot(new Vector2D(210, 380), 3, true);
-        this.createParkingSpot(new Vector2D(210, 470), 3, false);
-    }
 
-    createParkingSpot(position, qadrant, occupied){
-        this.parkingSpotsArray[this.parkingSpotIndex] = new ParkingSpot(position, qadrant, occupied);
-        this.parkingSpotIndex++;
+    createParkingspot(position, qadrant, occupied){
+        this.parkingspotsArray[this.parkingspotIndex] = new Parkingspot(this.gameObject,position, qadrant, occupied);
+        this.parkingspotIndex++;
     }
 
     draw() {
-        for(let spot of this.parkingSpotsArray){
+        for(let spot of this.parkingspotsArray){
             spot.draw()
         }
     }
 
     update(){
-        for(let spot of this.parkingSpotsArray){
+        for(let spot of this.parkingspotsArray){
             spot.update()
         }
     }

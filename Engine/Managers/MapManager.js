@@ -1,7 +1,7 @@
 class MapManager{
 
-    constructor(GameObject){
-        this.GameObject = GameObject;
+    constructor(gameObject){
+        this.gameObject = gameObject;
 
     }
 
@@ -41,18 +41,18 @@ class MapManager{
                
                 switch(mapArray[y][x]){
                     case 1: 
-                        this.GameObject.CarManager.createCar(position, 0);
+                        this.gameObject.CarManager.createCar(position, 0,false);
                         
                     break;
 
                     case 2:
                         //console.log(position)
-                        this.GameObject.ParkingSpotManager.createParkingSpot(position, 0, true);
+                        this.gameObject.ParkingspotManager.createParkingspot(position, 0, true);
                     break;
 
                     case 3:
-                        this.GameObject.WallManager.createWall(position, new Vector2D(XDivide, YDivide), 0);
-                        //console.log(position)
+                        this.gameObject.WallManager.createWall(position, new Vector2D(XDivide, YDivide), 0);
+                        
                     break;
 
                 }

@@ -1,8 +1,8 @@
 class Car extends CollidableSprite {
 
-    constructor(position, angle, drivable){
+    constructor(gameObject,position, angle, drivable){
         super(position, 'rect', new Vector2D(100, 50), angle);
-
+        this.objName="car"
         this.drivable = drivable;
 
         this.angle_power = 0;
@@ -18,6 +18,7 @@ class Car extends CollidableSprite {
         
         // for testing ->
         this.color = 'red';
+        this.gameObject=gameObject
     }
 
     
@@ -33,7 +34,7 @@ class Car extends CollidableSprite {
         pop();
     }
 
-    update(keys, walls){
+    update(keys){
         if(!this.drivable)
             return;
 
@@ -42,10 +43,8 @@ class Car extends CollidableSprite {
         this.setCarDirection();  
         this.velocity = new Vector2D(this.car_direction.X, this.car_direction.Y);
         this.position.add(this.velocity);
-        
-        super.setCollider()
         this.color = 'red';
-        this.checkCollision(walls);
+        this.checkCollision();      
 
     }
 
@@ -127,12 +126,25 @@ class Car extends CollidableSprite {
     }
 
 
-    checkCollision(colliders){
+    checkCollision(){
+    super.setCollider()
+
+    this.checkCollisionWithOne(this.gameObject.WallManager.wallsArray);
+    this.checkCollisionWithOne(this.gameObject.CarManager.carsArray);
+    this.checkCollisionWithOne(this.gameObject.ParkingspotManager.parkingspotsArray);
+
+    }
+
+
+
+    checkCollisionWithOne(colliders){
         colliders.map( (collider) => this.collision(collider));
     }
+
     collisionEvent(withObj){
         this.color="white"
         this.speed=-4*this.gear
+        console.log(withObj.objName)
 
 
     }

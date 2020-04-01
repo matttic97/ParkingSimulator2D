@@ -1,7 +1,9 @@
 class Wall extends CollidableSprite{
-    constructor(position, size, angle){
+    constructor(gameObject,position, size, angle){
         super(position, 'rect', size, angle);
         this.color="purple"
+        this.objName="wall"
+        this.gameObject=gameObject
     }
 
     draw() {
