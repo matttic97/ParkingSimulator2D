@@ -2,7 +2,7 @@ class CarManager{
     constructor(gameObject){
         this.carsArray=[];
         this.carIndex=0;
-        this.gameObject
+        this.gameObject=gameObject
     }
 
     createCar(position,angle,drivable){

@@ -1,16 +1,16 @@
 class Game{
 
     constructor(level){
+
+           /*V vse Managerje moramo dat objekt od Game, da lahko pol ve na kateri game naj se nanša,
+        ker Managerji samo managajo , game clss je glavni*/
         this.WallManager = new WallManager(this);
         this.ParkingspotManager = new ParkingspotManager(this);
         this.CarManager = new CarManager(this);
-
         this.MapManager = new MapManager(this)
-        /*Map Managerju moramo dat objekt od Game, da lahko pol spawna objecte v tem Game classu,
-        ker MapManager samo creata map, drawa pa ga Game class*/
-       this.MapManager.createMap(0);
+     
 
-       this.car = new Car(this,new Vector2D(300, 100), 0, true)
+       this.CarManager.createCar(new Vector2D(300, 100), 0, true)
     }
 
     draw(){
@@ -19,17 +19,12 @@ class Game{
         this.WallManager.draw();
         this.CarManager.draw();
 
-        this.car.draw();
     }
 
     update(keys){
         this.ParkingspotManager.update()
         this.CarManager.update(keys);
         this.WallManager.update();
-
-        this.car.update(keys)
-        //this.car.checkCollision([this.WallManager.WallsArray[0]]);
-        //console.log(this.WallManager.WallsArray[0])
     }
 
 

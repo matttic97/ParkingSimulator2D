@@ -143,7 +143,7 @@ class Car extends CollidableSprite {
 
     collisionEvent(withObj){
         this.color="white"
-        this.speed=-4*this.gear
+        this.speed=-(this.speed)/abs(this.speed)*4
         console.log(withObj.objName)
 
 

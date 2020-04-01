@@ -2,10 +2,11 @@ class MapManager{
 
     constructor(gameObject){
         this.gameObject = gameObject;
-
+        this.createMap()
+       
     }
 
-    createMap(mapArray1){
+    createMap(){
 
         //1-avto
         //2-parking
@@ -42,7 +43,6 @@ class MapManager{
                 switch(mapArray[y][x]){
                     case 1: 
                         this.gameObject.CarManager.createCar(position, 0,false);
-                        
                     break;
 
                     case 2:
