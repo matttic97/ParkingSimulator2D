@@ -1,24 +1,25 @@
 class CarManager{
-    constructor(){
-        this.CarsArray=[];
-        this.CarIndex=0;
+    constructor(gameObject){
+        this.carsArray=[];
+        this.carIndex=0;
+        this.gameObject=gameObject
     }
 
-    createCar(position,angle){
-        this.CarsArray[this.CarIndex] = new Car(position, angle, false);
-        this.CarIndex++;
+    createCar(position,angle,drivable){
+        this.carsArray[this.carIndex] = new Car(this.gameObject,position, angle, drivable);
+        this.carIndex++;
     }
 
     draw() {
-        for(let car of this.CarsArray){
+        for(let car of this.carsArray){
             car.draw()
         }
     }
 
     update(keys){
     
-        for(let car of this.CarsArray){
+        for(let car of this.carsArray){
             car.update(keys)
-        }
+       }
     }
 }

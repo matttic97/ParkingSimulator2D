@@ -34,6 +34,9 @@ class Vector2D{
     static transpose(vector){
         return [[vector.X], [vector.Y]];
     }
+    static distance(v1,v2){
+        return Math.sqrt((v1.X-v2.X)*(v1.X-v2.X)+(v1.Y-v2.Y)*(v1.Y-v2.Y))
+    }
 
     /* OBJECT METHODS */
     add(vector){

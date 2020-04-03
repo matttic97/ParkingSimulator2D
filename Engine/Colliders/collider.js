@@ -23,8 +23,7 @@ class Collider {
                 return;
             }
         }
-
-        a.color = 'white';
+        Collider.collisonDetected(a,b)
     }
 
     static pointProjection(points, axis){
@@ -56,4 +55,18 @@ class Collider {
         return false;
     }
 
+
+
+    static collisonDetected(a,b){
+
+             if (typeof a.collisionEvent === 'function')
+        {
+            a.collisionEvent(b);
+        }
+        
+             if (typeof b.collisionEvent === 'function')
+        {
+            b.collisionEvent(a);
+        }
+    }
 }

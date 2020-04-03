@@ -10,6 +10,11 @@ class CollidableSprite{
         this.setEdges();
     }
 
+    setCollider(){
+        this.setPoints();
+        this.setEdges();
+
+    }
     setPoints(){
         let size = new Vector2D(this.size.X, this.size.Y);
         size.devide(2);
@@ -52,6 +57,7 @@ class CollidableSprite{
     }
 
     collision(collider){
+        if (collider==this)return;
         let type = this.poligon + '-' + collider.poligon;
         switch(type){
             case 'circle-rect' :    return Collider.Collision_Circle_vs_Rect(this, collider);

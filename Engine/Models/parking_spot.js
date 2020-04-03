@@ -1,14 +1,16 @@
-class ParkingSpot extends CollidableSprite {
+class Parkingspot extends CollidableSprite {
 
-    constructor(position, qadrant, occupied){
-        super(position, 'rect', new Vector2D(130, 90), ((qadrant - 1) * 90));
+    constructor(gameObject,position, qadrant, occupied){
+        size=new Vector2D(100, 50)
+        super(position, 'rect', size, (qadrant * 90));
 
-        this.position = position;
         this.occupied = occupied;
-
+        this.objName="parkingspot"
         this.line_width = 10;
 
         this.car_color = color(random(255), random(255), random(255));
+        this.gameObject=gameObject
+
     }
 
     update(){
@@ -23,6 +25,7 @@ class ParkingSpot extends CollidableSprite {
 
         noStroke(); 
         fill(255, 255, 255);
+        rect(0,0, this.size.X, this.size.Y);
         rect(this.size.X / 2, 0, this.size.X, this.line_width);
         rect(this.line_width / 2, this.size.Y / 2, this.line_width, this.size.Y);
         rect(this.size.X / 2, this.size.Y, this.size.X, this.line_width);
@@ -30,7 +33,7 @@ class ParkingSpot extends CollidableSprite {
 
         if(this.occupied){
             fill(this.car_color);
-            rect(70, 45, 100, 50);
+            rect(0, 0, this.size.X, this.size.Y);
         }
 
         pop();

@@ -1,11 +1,12 @@
 class MapManager{
 
-    constructor(GameObject){
-        this.GameObject = GameObject;
-
+    constructor(gameObject){
+        this.gameObject = gameObject;
+        this.createMap()
+       
     }
 
-    createMap(mapArray1){
+    createMap(){
 
         //1-avto
         //2-parking
@@ -17,13 +18,13 @@ class MapManager{
         [3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,0,0,0,0,3], 
         [3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,0,0,0,0,3], 
         [3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,3,3,0,0,0,3], 
-        [3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,3,3,0,0,0,3], 
-        [3,0,0,3,3,3,3,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,3], 
-        [3,0,0,3,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3], 
+        [3,0,0,0,0,0,0,0,0,3,0,3,0,0,0,0,3,3,3,3,0,0,0,3], 
+        [3,0,0,3,3,3,3,0,0,3,2,3,0,0,0,0,0,0,0,0,0,0,0,3], 
+        [3,0,0,3,0,0,3,0,0,3,0,3,0,0,0,0,0,0,0,0,0,0,0,3], 
         [3,0,0,3,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3], 
         [3,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3], 
         [3,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,3], 
-        [3,0,0,3,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,3], 
+        [3,0,0,3,0,2,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,3], 
         [3,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3], 
         [3,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3], 
         [3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
@@ -41,18 +42,17 @@ class MapManager{
                
                 switch(mapArray[y][x]){
                     case 1: 
-                        this.GameObject.CarManager.createCar(position, 0);
-                        
+                        this.gameObject.CarManager.createCar(position, 0,false);
                     break;
 
                     case 2:
                         //console.log(position)
-                        this.GameObject.ParkingSpotManager.createParkingSpot(position, 0, true);
+                        this.gameObject.ParkingspotManager.createParkingspot(position, 1, true);
                     break;
 
                     case 3:
-                        this.GameObject.WallManager.createWall(position, new Vector2D(XDivide, YDivide), 0);
-                        //console.log(position)
+                        this.gameObject.WallManager.createWall(position, new Vector2D(XDivide, YDivide), 0);
+                        
                     break;
 
                 }

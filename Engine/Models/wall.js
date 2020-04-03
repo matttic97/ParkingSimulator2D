@@ -1,11 +1,14 @@
 class Wall extends CollidableSprite{
-    constructor(position, size, angle){
+    constructor(gameObject,position, size, angle){
         super(position, 'rect', size, angle);
+        this.color="purple"
+        this.objName="wall"
+        this.gameObject=gameObject
     }
 
     draw() {
         push();
-        fill(255,12,245)
+        fill(this.color)
         stroke('black');
         translate(this.position.X, this.position.Y);
         rotate(this.angle)
@@ -18,7 +21,11 @@ class Wall extends CollidableSprite{
     update(){
     }
 
+    collisionEvent(withObj){
 
+        this.color="white"
+
+    }
  
     getCenter(){
         return new Vector2D(this.position.X + this.size.X / 2, this.position.Y + this.size.Y / 2)
