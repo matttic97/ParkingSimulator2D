@@ -126,8 +126,6 @@ class NeuralNetwork_FF {
         this.weights_ho.map(mutate);
         this.bias_hidden.map(mutate);
         this.bias_output.map(mutate);
-
-        return this;
     }
 
     serialize(){

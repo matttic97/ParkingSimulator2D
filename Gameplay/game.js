@@ -9,8 +9,8 @@ class Game{
         this.CarManager = new CarManager(this);
         this.MapManager = new MapManager(this)
         this.parkingspot=this.ParkingspotManager.createParkingspot(new Vector2D(900, 600), 1, true);
-        this.CarManager.firstGeneration(new Vector2D(300, 100),20);
-        this.updateCycles=2;
+        this.CarManager.firstGeneration(new Vector2D(300, 100),50);
+        this.updateCycles=1
     }
 
     draw(){
@@ -28,7 +28,7 @@ class Game{
 
         let populationStatus=this.CarManager.update(keys);
         if(!populationStatus){
-        this.CarManager.nextGeneration(new Vector2D(300, 100))
+        this.CarManager.nextGeneration(new Vector2D(300, 100),0.2)
         }
         
     }

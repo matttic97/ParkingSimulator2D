@@ -26,8 +26,8 @@ class CarManager{
     }
 
     createCar(position,angle,drivable){
-       
-        let createdObj=new Car(this.gameObject,new Vector2D(500, 100), angle, drivable,this.bestBrainsArray[this.carIndex]);
+        let tmpPos=new Vector2D(position.X,position.Y)
+        let createdObj=new Car(this.gameObject,tmpPos, angle, drivable,this.bestBrainsArray[this.carIndex]);
         this.carsArray[this.carIndex] = createdObj
         this.carIndex++;
         return createdObj;
@@ -44,7 +44,7 @@ class CarManager{
     this.spawnCars(position,numberOfCars);
     }
 
-    nextGeneration(position){
+    nextGeneration(position,mutateRate){
     let bestCarBrains=this.carsArray[0].brains.copy();
     let bestCarFitness=this.carsArray[0].score;
     for(let car of this.carsArray){
@@ -56,7 +56,9 @@ class CarManager{
  console.log(bestCarFitness)
     this.bestBrainsArray=[];
     for(let i=0;i<this.numberOfCars;i++){
-    this.bestBrainsArray[i]=bestCarBrains.copy().mutate(0.1)
+    let tmpBestCarBrains=bestCarBrains.copy();
+    tmpBestCarBrains.mutate(mutateRate);
+    this.bestBrainsArray[i]=tmpBestCarBrains;
     }
     console.log(this.bestBrainsArray)
     this.carsArray=[];
