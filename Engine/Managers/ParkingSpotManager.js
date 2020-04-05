@@ -7,8 +7,10 @@ class ParkingspotManager{
 
 
     createParkingspot(position, qadrant, occupied){
-        this.parkingspotsArray[this.parkingspotIndex] = new Parkingspot(this.gameObject,position, qadrant, occupied);
+        let createdObj=new Parkingspot(this.gameObject,position, qadrant, occupied);
+        this.parkingspotsArray[this.parkingspotIndex] =  createdObj
         this.parkingspotIndex++;
+        return createdObj;
     }
 
     draw() {

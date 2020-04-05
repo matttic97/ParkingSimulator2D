@@ -1,8 +1,10 @@
 class Car extends CollidableSprite {
 
-    constructor(gameObject,position, angle, drivable){
+    constructor(gameObject,position, angle, drivable,brains){
         super(position, 'rect', new Vector2D(100, 50), angle);
+        this.gameObject=gameObject
         this.objName="car"
+
         this.drivable = drivable;
         this.collided=false;
         this.angle_power = 0;
@@ -18,12 +20,69 @@ class Car extends CollidableSprite {
         this.maxspeed = 5;
         // for testing ->
         this.color = 'red';
-        this.gameObject=gameObject
+    
+
+        this.aliveTime=30*5 //5 sekund
+        this.score=0
+        if(brains){
+
+            this.brains=brains.copy()
+        }
+        else this.brains= new NeuralNetwork_FF(5,30,5,0.1) ;
+        /*
+        inputs: objekt na levo,desno,spredaj,zadaj in razdalja do najblizjega prostega parking spota.
+        outputs: naprej nazaj levo desno stop
+*/
     }
 
+    think(){
+        var keys = {}
+        let sensorinputs=new Array(5) //5 inputov bo
+        let  distancetest=Vector2D.distance(this.position,this.gameObject.parkingspot.position)/canvasMaxPossibileDistance 
+        this.score=1-distancetest
+        sensorinputs[0]=distancetest//getDistanceFrom(closestEmptyParkingspot)
+        sensorinputs[1]=this.getCloseObject(1) //levo
+        sensorinputs[2]=this.getCloseObject(2) //desno
+        sensorinputs[3]=this.getCloseObject(3) //gor
+        sensorinputs[4]=this.getCloseObject(4) //dol
+
+        let values=this.brains.predict(sensorinputs);
+
+        if (values.data[0]>=0.5)keys['ArrowLeft']=1; //levo
+        if (values.data[1]>=0.5)keys['ArrowRight']=1;//desno
+        if (values.data[2]>=0.5)keys['ArrowUp']=1;//gor
+        if (values.data[3]>=0.5)keys['ArrowDown']=1;//dol
+        if (values.data[4]>=0.5)keys['Spacebar']=1;//stop
+        return keys;
+    }
+
+    getCloseObject(side){
+        let objVal=0
+    switch (side){
+        case 1:
+        objVal=0.1;
+        break;
+
+        case 2:
+        objVal=0.2;
+        break;
+
+        case 3:
+        objVal=0.3;
+        break;
+
+        case 4:
+        objVal=0.4;
+        break;
+    
+    }
+     return objVal;
+ }
     
 
     draw() {
+
+
         push();
         fill(this.color);
         stroke('black');   
@@ -32,13 +91,16 @@ class Car extends CollidableSprite {
         rect(0,0, this.size.X, this.size.Y);
         noFill();
         pop();
-    }
+            }
 
     update(keys){
-        if(!this.drivable)return;
+         if(this.aliveTime>0)this.aliveTime--;
+        else this.drivable=false;
 
+        if(!this.drivable)return;
+         let keysnn=this.think()
         this.adjustSteerPower();
-        this.move(keys);
+        this.move(keysnn);
         this.setCarDirection();  
         this.velocity = new Vector2D(this.car_direction.X, this.car_direction.Y);
         this.position.add(this.velocity);
@@ -152,12 +214,12 @@ class Car extends CollidableSprite {
     collisionEvent(withObj){
     	this.collided=true;
         this.color="white"
-        console.log(withObj.objName)
 
         if(withObj.objName=="wall"||withObj.objName=="parkingspot"){
         this.position=new Vector2D(this.position.X-this.car_direction.X,this.position.Y-this.car_direction.Y)
   		this.stop();
         this.angle-=(this.angle_power+5)*this.rotating*Math.sign(this.speed)
+        this.drivable=false;
     }
        
 

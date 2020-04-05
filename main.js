@@ -1,17 +1,21 @@
 var game;
 const canvasWidth=1200;
 const canvasHeight=800;
-
+const canvasMaxPossibileDistance=Math.sqrt(canvasWidth*canvasWidth+canvasHeight*canvasHeight)
 function setup(){
     createCanvas(canvasWidth, canvasHeight);
+    frameRate(30)
     rectMode(CENTER);
     angleMode(DEGREES);
 
     game = new Game(1);
 }
 
+function update(){
+	   
+}
 function draw(){
-    game.update(keys);
+	 game.update(keys);
     game.draw();
 }
 
