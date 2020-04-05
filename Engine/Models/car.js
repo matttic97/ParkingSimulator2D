@@ -13,22 +13,22 @@ class Car extends CollidableSprite {
         this.car_direction = Vector2D.zeros();
         this.rotating=0 // -1 left, 1 right
         this.gear = 0;  // -1=reverse, 0=neutral, 1=forward
-        this.acceleration = 0.1
-        this.friction = 0.03
+        this.acceleration = 0.4
+        this.friction = 0.06
         this.brakeFriction=0.6;
         this.speed = 0;
-        this.maxspeed = 5;
+        this.maxspeed = 10;
         // for testing ->
         this.color = 'red';
     
 
-        this.aliveTime=30*5 //5 sekund
+        this.aliveTime=30*8 //5 sekund
         this.score=0
         if(brains){
 
             this.brains=brains.copy()
         }
-        else this.brains= new NeuralNetwork_FF(5,30,5,0.1) ;
+        else this.brains= new NeuralNetwork_FF(5,20,5,0.1) ;
         /*
         inputs: objekt na levo,desno,spredaj,zadaj in razdalja do najblizjega prostega parking spota.
         outputs: naprej nazaj levo desno stop
@@ -215,7 +215,7 @@ class Car extends CollidableSprite {
     	this.collided=true;
         this.color="white"
 
-        if(withObj.objName=="wall"||withObj.objName=="parkingspot"){
+        if(withObj.objName=="wall"){
         this.position=new Vector2D(this.position.X-this.car_direction.X,this.position.Y-this.car_direction.Y)
   		this.stop();
         this.angle-=(this.angle_power+5)*this.rotating*Math.sign(this.speed)

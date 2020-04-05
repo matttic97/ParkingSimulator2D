@@ -15,7 +15,7 @@ class CarManager{
         }
     }
 
-    update(keys){
+    update(keys){ //update nam returna FALSE, kadar se vsi avti zabijejo ali izteče čas avtu.(ko postane drivable=false)
         let disabedCars=0;
         for(let car of this.carsArray){
             car.update(keys)
@@ -33,34 +33,47 @@ class CarManager{
         return createdObj;
     }
 
-    spawnCars(position){
+    spawnCars(position){ //spawnamo število avtov
         for(let i=0;i<this.numberOfCars;i++){
         this.createCar(position, 0, true)
         }
     }
 
-    firstGeneration(position,numberOfCars){
-        this.numberOfCars=numberOfCars
+    firstGeneration(position,numberOfCars){ //inicializiramo prvo generacijo
+    this.numberOfCars=numberOfCars
     this.spawnCars(position,numberOfCars);
     }
 
-    nextGeneration(position,mutateRate){
-    let bestCarBrains=this.carsArray[0].brains.copy();
-    let bestCarFitness=this.carsArray[0].score;
-    for(let car of this.carsArray){
-        if (car.score> bestCarFitness){
-            bestCarFitness=car.score;
-            bestCarBrains=car.brains.copy();
+    nextGeneration(position,selection,mutateRate,deviation){
+
+        //dobimo braine o prvih SELECTION najboljsih  avtov. 
+    let bestCarBrains=[]
+
+    for (let i=0;i<selection;i++){
+        let currentBestcar;
+        let bestCarFitness=-Infinity;
+        for(let car of this.carsArray){
+            if (car.score> bestCarFitness){
+                bestCarFitness=car.score;
+                bestCarBrains[i]=car.brains.copy();
+                currentBestcar=car;
+            }
         }
-     }
- console.log(bestCarFitness)
+    currentBestcar.score=-Infinity; //s izkljucimo prvega najboljsega vn. in tako dalje da bo naslednji v arrayu bil drugi najboljši.
+    }
+  
+
     this.bestBrainsArray=[];
-    for(let i=0;i<this.numberOfCars;i++){
-    let tmpBestCarBrains=bestCarBrains.copy();
-    tmpBestCarBrains.mutate(mutateRate);
+    for(let i=selection;i<this.numberOfCars;i++){
+    let tmpBestCarBrains=bestCarBrains[i%selection].copy(); // tukaj izmed selekcije izberemo in jih zmutiramo (narejeno da se ekvivalentno reproducirajo)
+    tmpBestCarBrains.mutate(mutateRate,deviation);
     this.bestBrainsArray[i]=tmpBestCarBrains;
     }
-    console.log(this.bestBrainsArray)
+
+   for(let i=0;i<selection;i++){
+     this.bestBrainsArray[i]=bestCarBrains[i].copy(); //da ševedno ohranimo ta prvih SELECTION  najbočših ce so drugi slabsi.
+        }    
+   
     this.carsArray=[];
     this.carIndex=0;
     this.spawnCars(position,this.numberOfCars);
