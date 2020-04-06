@@ -28,7 +28,7 @@ class Game{
 
         let populationStatus=this.CarManager.update(keys);
         if(!populationStatus){
-        this.CarManager.nextGeneration(new Vector2D(300, 100),5,1,0) //pozicija,3-koliko izmed prvih avtov vzamemo, 1- verjetnost mutacije. 0.1- devijacija
+        this.CarManager.nextGeneration(new Vector2D(300, 100),5,1,1) //pozicija,3-koliko izmed prvih avtov vzamemo, 1- verjetnost mutacije. 1- devijacija
         }
         
     }
