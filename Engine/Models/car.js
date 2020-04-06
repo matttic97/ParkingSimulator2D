@@ -218,7 +218,6 @@ class Car extends CollidableSprite {
         if(withObj.objName=="wall"){
         this.position=new Vector2D(this.position.X-this.car_direction.X,this.position.Y-this.car_direction.Y)
   		this.stop();
-        this.angle-=(this.angle_power+5)*this.rotating*Math.sign(this.speed)
         this.drivable=false;
     }
        

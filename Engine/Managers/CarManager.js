@@ -48,18 +48,21 @@ class CarManager{
 
         //dobimo braine o prvih SELECTION najboljsih  avtov. 
     let bestCarBrains=[]
-
+    let currentBestCar;
     for (let i=0;i<selection;i++){
-        let currentBestcar;
-        let bestCarFitness=-Infinity;
+         let bestCarScore=-99999;
         for(let car of this.carsArray){
-            if (car.score> bestCarFitness){
-                bestCarFitness=car.score;
+            if (car.score> bestCarScore){
+                bestCarScore=car.score;
                 bestCarBrains[i]=car.brains.copy();
-                currentBestcar=car;
+                currentBestCar=car;
             }
         }
-    currentBestcar.score=-Infinity; //s izkljucimo prvega najboljsega vn. in tako dalje da bo naslednji v arrayu bil drugi najboljši.
+        for(let car of this.carsArray){
+            if(car.score==bestCarScore) car.score=-99999;
+        }
+    if((typeof bestCarBrains[i]!=='object')){bestCarBrains[i]=bestCarBrains[0].copy();}//če zmanjka unkiatnih avtov, se zapolnejo z taprvimi najboljšimi
+ //s izkljucimo prvega najboljsega vn. in tako dalje da bo naslednji v arrayu bil drugi najboljši.
     }
   
 
