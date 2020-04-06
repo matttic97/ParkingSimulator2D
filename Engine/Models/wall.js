@@ -23,7 +23,7 @@ class Wall extends CollidableSprite{
 
     collisionEvent(withObj){
 
-        this.color="white"
+     //   this.color="white"
 
     }
  

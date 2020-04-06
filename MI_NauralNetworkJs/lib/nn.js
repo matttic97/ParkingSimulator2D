@@ -119,7 +119,7 @@ class NeuralNetwork_FF {
     // Accept an arbitrary function for mutation
     mutate(rate,deviation) {
         function mutate(val){
-            if(Math.random() < rate) return val + randomGaussian(0,deviation);
+            if(Math.random() <= rate) return val + randomGaussian(0,deviation);
             else return val;
         }
         this.weights_ih.map(mutate);
