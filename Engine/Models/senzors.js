@@ -106,7 +106,7 @@ class Senzors {
 
     checkCollision(){
         this.array.map((senzor) => senzor.checkCollision());
-        this.array.map((senzor, i) => this.inter_array[i] = senzor.intersaction / senzor.size);
+        this.array.map((senzor, i) => this.inter_array[i] = senzor.intersaction / 1000);
     }
 
 }
