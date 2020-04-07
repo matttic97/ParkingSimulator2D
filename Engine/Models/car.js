@@ -13,19 +13,21 @@ class Car extends CollidableSprite {
         this.car_direction = Vector2D.zeros();
         this.rotating=0 // -1 left, 1 right
         this.gear = 0;  // -1=reverse, 0=neutral, 1=forward
-        this.acceleration = 0.3
+        this.acceleration = 0.2
         this.friction = 0.06
         this.brakeFriction=0.7;
         this.speed = 0;
-        this.maxspeed = 7;
+        this.maxspeed = 4;
         // for testing ->
         this.color = 'red';
         
         this.senzors = new Senzors(gameObject, this, position, 100, angle)
-        this.timeToCheckScore = 30*4//  sekund
+        this.timeToCheck = 30*4//  sekund
         this.score = 0
-        this.prevBestScore=-Infinity;
+        this.prevDrivenDistance=0;
+        this.drivenDistance=0;
         this.gameFrameCounter=0;
+        this.bestScore=0;
         if(brains){
 
             this.brains=brains.copy()
@@ -227,8 +229,22 @@ class Car extends CollidableSprite {
 
   	var distance = Vector2D.distance(this.position, this.gameObject.parkingspot.position)/canvasMaxPossibileDistance;
     this.score = Math.pow((1 - distance),2);
-    if((!(this.gameFrameCounter%this.timeToCheckScore))&&this.score<=this.prevBestScore){this.drivable=false;}
-    if(this.score>this.prevBestScore)this.prevBestScore=this.score;
-        
+    
+    this.drivenDistance+=math.abs(this.speed);
+
+    if(!(this.gameFrameCounter%this.timeToCheck)){
+		
+
+
+
+		if((this.drivenDistance-this.prevDrivenDistance)<math.abs(this.maxspeed*this.timeToCheck/8)){this.drivable=false;}
+		this.prevDrivenDistance=this.drivenDistance;   	
+
+		if(math.abs(abs(this.score)-abs(this.bestScore))<(this.size.Y/canvasMaxPossibileDistance)){this.drivable=false;}
+		if(this.score>this.bestScore)this.bestScore=this.score;
+
+
+    }
+  
     }
 }
