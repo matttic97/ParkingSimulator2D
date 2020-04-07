@@ -1,10 +1,12 @@
 class CollidableSprite{
 
-    constructor(position, poligon, size, angle){
+    constructor(position, poligon, size, angle, offset){
         this.position = position;
         this.poligon = poligon;
         this.size = size;
         this.angle = angle;
+
+        this.offset = offset;
 
         this.setPoints();
         this.setEdges();
@@ -15,6 +17,7 @@ class CollidableSprite{
         this.setEdges();
 
     }
+
     setPoints(){
         let size = new Vector2D(this.size.X, this.size.Y);
         size.devide(2);
@@ -59,12 +62,13 @@ class CollidableSprite{
     collision(collider){
         if (collider==this)return;
         let type = this.poligon + '-' + collider.poligon;
-        switch(type){
-            case 'circle-rect' :    return Collider.Collision_Circle_vs_Rect(this, collider);
-            case 'rect-circle' :    return Collider.Collision_Circle_vs_Rect(this, collider);
-            case 'rect-rect' :      return Collider.Collision_Rect_vs_Rect(this, collider);
-            default :               return true;
-        }
+        // switch(type){
+        //     case 'circle-rect' :    return Collider.Collision_Circle_vs_Rect(this, collider);
+        //     case 'rect-circle' :    return Collider.Collision_Circle_vs_Rect(this, collider);
+        //     case 'rect-rect' :      return Collider.Collision_Rect_vs_Rect(this, collider);
+        //     default :               return true;
+        // }
+        return Collider.Collision_Projection(this, collider);
     }
 
 }

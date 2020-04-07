@@ -4,11 +4,12 @@
 
 class Collider {
 
-    static Collision_Rect_vs_Rect(a, b){
+    static Collision_Projection(a, b){
         // make projection axises from poligon with less edges
         // zaenx uzamem unijo, morm se sprobat vec nacinov
         let edges = [...new Set([...a.edges, ...b.edges])]; //a.edges.length > b.edges.length ? b.edges : a.edges;
         
+        let max = -Infinity;
         for(let i = 0; i < edges.length; i++){
             // take axis perpendicular to the current edge
             let axis = new Vector2D(-edges[i].Y, edges[i].X);
@@ -19,11 +20,16 @@ class Collider {
             let projectionB = Collider.pointProjection(b.points, axis);
 
             // check if there is no intersaction
-            if(!Collider.checkIntersaction(projectionA, projectionB)){
-                return;
+            let intersaction = Collider.checkIntersaction(projectionA, projectionB);
+            if(intersaction >= 0){
+                if(max < intersaction)
+                    max = intersaction;
+                continue;
             }
+            return;
         }
-        Collider.collisonDetected(a,b)
+
+        Collider.collisonDetected(a, b, max)
     }
 
     static pointProjection(points, axis){
@@ -45,9 +51,9 @@ class Collider {
 
     static checkIntersaction(a, b){
         if(a.min < b.min)
-            return (a.max - b.min >= 0)
+            return a.max - b.min
         
-        return (b.max - a.min >= 0)
+        return b.max - a.min
     }
 
     static Collision_Circle_vs_Rect(a, b){
@@ -57,16 +63,11 @@ class Collider {
 
 
 
-    static collisonDetected(a,b){
-
-             if (typeof a.collisionEvent === 'function')
-        {
-            a.collisionEvent(b);
-        }
+    static collisonDetected(a, b, intersaction){
+        if (typeof a.collisionEvent === 'function')
+            a.collisionEvent(b, intersaction);
         
-             if (typeof b.collisionEvent === 'function')
-        {
-            b.collisionEvent(a);
-        }
+        if (typeof b.collisionEvent === 'function')
+            b.collisionEvent(a, intersaction);
     }
 }

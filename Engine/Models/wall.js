@@ -15,7 +15,6 @@ class Wall extends CollidableSprite{
         rect(0,0, this.size.X, this.size.Y);
         noFill();
         pop();
-        
     }
 
     update(){
