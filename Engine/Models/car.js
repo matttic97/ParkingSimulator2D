@@ -13,25 +13,24 @@ class Car extends CollidableSprite {
         this.car_direction = Vector2D.zeros();
         this.rotating=0 // -1 left, 1 right
         this.gear = 0;  // -1=reverse, 0=neutral, 1=forward
-        this.acceleration = 0.5
+        this.acceleration = 0.3
         this.friction = 0.06
         this.brakeFriction=0.7;
         this.speed = 0;
-        this.maxspeed = 13;
+        this.maxspeed = 7;
         // for testing ->
         this.color = 'red';
-
+        
         this.senzors = new Senzors(gameObject, this, position, 100, angle)
-
-        this.alive = true;
-
-        this.aliveTime = 30*8 //5 sekund
+        this.timeToCheckScore = 30*4//  sekund
         this.score = 0
+        this.prevBestScore=-Infinity;
+        this.gameFrameCounter=0;
         if(brains){
 
             this.brains=brains.copy()
         }
-        else this.brains = new NeuralNetwork_FF(9, 25, 5, 0.1);
+        else this.brains = new NeuralNetwork_FF(10, 25, 5, 0.1);
         /*
         inputs: objekt na levo,desno,spredaj,zadaj in razdalja do najblizjega prostega parking spota.
         outputs: naprej nazaj levo desno stop
@@ -39,21 +38,23 @@ class Car extends CollidableSprite {
     }
 
     think(){
-        let  distance = Vector2D.distance(this.position, this.gameObject.parkingspot.position)/canvasMaxPossibileDistance;
-        this.score = 1 - distance;
-        let input = [
-            distance, 
-            this.senzors.inter_array[0],
-            this.senzors.inter_array[1],
-            this.senzors.inter_array[2],
-            this.senzors.inter_array[3],
-            this.senzors.inter_array[4],
-            this.senzors.inter_array[5],
-            this.senzors.inter_array[6],
-            this.senzors.inter_array[7],
+     
+        var Xdistance=0.5+(this.gameObject.parkingspot.position.X-this.position.X)/(2*canvasWidth);
+        var Ydistance=0.5+(this.gameObject.parkingspot.position.Y-this.position.Y)/(2*canvasHeight); 
+        var input = [
+            Xdistance,
+            Ydistance, 
+            this.senzors.inter_array[0][0],
+            this.senzors.inter_array[1][0],
+            this.senzors.inter_array[2][0],
+            this.senzors.inter_array[3][0],
+            this.senzors.inter_array[4][0],
+            this.senzors.inter_array[5][0],
+            this.senzors.inter_array[6][0],
+            this.senzors.inter_array[7][0],
         ];
         
-        let output = this.brains.predict(input);
+        var output = this.brains.predict(input);
         
         var keys = {}
         keys['ArrowLeft'] = output.data[0] >= 0.5;  //levo
@@ -64,32 +65,9 @@ class Car extends CollidableSprite {
         return keys;
     }
 
-    getCloseObject(side){
-        let objVal=0
-    switch (side){
-        case 1:
-        objVal=0.1;
-        break;
-
-        case 2:
-        objVal=0.2;
-        break;
-
-        case 3:
-        objVal=0.3;
-        break;
-
-        case 4:
-        objVal=0.4;
-        break;
-    
-    }
-     return objVal;
- }
-    
 
     draw() {
-        if(!this.alive)
+        if(!this.drivable)
             return;
 
         push();
@@ -100,15 +78,14 @@ class Car extends CollidableSprite {
         rect(0,0, this.size.X, this.size.Y);
         noFill();
         pop();
-        //this.senzors.draw();
+        this.senzors.draw();
     }
 
     update(keys){
-        if(this.aliveTime > 0) this.aliveTime--;
-        else this.drivable = false;
-
+    	this.gameFrameCounter++;
+    	this.updateScore();
         if(!this.drivable)return;
-            keys = this.think();
+        keys = this.think();
 
         this.adjustSteerPower();
         this.move(keys);
@@ -119,7 +96,9 @@ class Car extends CollidableSprite {
         this.color = 'red';
 
         this.senzors.update(this.position, this.angle);
-        this.checkCollision();           
+        this.checkCollision();      
+
+
     }
 
     move(keys){   
@@ -175,8 +154,8 @@ class Car extends CollidableSprite {
     }
     
     setCarDirection(){
-        let a = math.cos(math.unit(this.angle, 'deg')) * Math.sign(this.speed) * this.speed;
-        let b = math.sin(math.unit(this.angle, 'deg')) * this.speed;
+        var a = math.cos(math.unit(this.angle, 'deg')) * Math.sign(this.speed) * this.speed;
+        var b = math.sin(math.unit(this.angle, 'deg')) * this.speed;
         if(Math.sign(this.speed) < 0)  a *= -1;
 
         this.car_direction = new Vector2D(a, b);
@@ -215,7 +194,7 @@ class Car extends CollidableSprite {
         this.senzors.checkCollision();
 
         // malo optimizacije dokler ne nardim quadThree-ja 
-        if(math.sum(this.senzors.inter_array) > 0.3){
+        if(this.senzors.getSum()> 0.1){
             this.checkCollisionWithOne(this.gameObject.WallManager.wallsArray); //za zide
             this.checkCollisionWithOne(this.gameObject.ParkingspotManager.parkingspotsArray); //za parking spote
         }
@@ -234,14 +213,22 @@ class Car extends CollidableSprite {
         if(withObj.objName=="wall"){
   		this.stop();
         this.drivable = false;
-        this.score = 0.95 * this.score;//zmanjsamo score ob zaboju za 40%
+        this.score = 0.90 * this.score;//zmanjsamo score ob zaboju za 40%
         }
     }
 
     stop(){
-        this.alive = false;
+        this.drivable = false;
     	this.speed = 0;
         this.velocity = Vector2D.zeros();
     }
 
+    updateScore(){
+
+  	var distance = Vector2D.distance(this.position, this.gameObject.parkingspot.position)/canvasMaxPossibileDistance;
+    this.score = Math.pow((1 - distance),2);
+    if((!(this.gameFrameCounter%this.timeToCheckScore))&&this.score<=this.prevBestScore){this.drivable=false;}
+    if(this.score>this.prevBestScore)this.prevBestScore=this.score;
+        
+    }
 }

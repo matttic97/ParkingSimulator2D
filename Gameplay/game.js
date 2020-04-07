@@ -22,13 +22,13 @@ class Game{
     }
 
     update(keys){
-        for(let i = 0; i < this.updateCycles; i++){
+        for(var i = 0; i < this.updateCycles; i++){
             this.ParkingspotManager.update()
             this.WallManager.update();
             //this.car.update(keys);
-            let populationStatus=this.CarManager.update(keys);
+            var populationStatus=this.CarManager.update(keys);
             if(!populationStatus)
-                this.CarManager.nextGeneration(new Vector2D(300, 100), 4, 0.08) //pozicija,10-koliko procentov izmed prvih avtov vzamemo,0.15-devijacija
+                this.CarManager.nextGeneration(new Vector2D(300, 100), 8, 0.8) //pozicija,10-koliko procentov izmed prvih avtov vzamemo,0.15-devijacija
         }
     }
 

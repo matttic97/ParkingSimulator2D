@@ -8,7 +8,7 @@ function derivative_sigmoid (y) {
 }
 
 function calculateGradients(matrix, func, errors, learning_rate){
-    let gradients = Matrix.map(matrix, func);
+    var gradients = Matrix.map(matrix, func);
     gradients.multiply(errors);
     gradients.multiply(learning_rate);
     return gradients;
@@ -30,7 +30,7 @@ class NeuralNetwork_FF {
      */    
     constructor (input_nodes, hidden_nodes, output_nodes, learning_rate) {
         if (input_nodes instanceof NeuralNetwork_FF) {
-            let network = input_nodes;
+            var network = input_nodes;
             this.input_nodes = network.input_nodes;
             this.hidden_nodes = network.hidden_nodes;
             this.output_nodes = network.output_nodes;
@@ -66,15 +66,15 @@ class NeuralNetwork_FF {
 
     feedforward (input_raw) {
         // make matrix from input
-        let inputs = Matrix.fromArray(input_raw); 
+        var inputs = Matrix.fromArray(input_raw); 
 
         // Generate the hidden outputs
-        let hidden = Matrix.multiply(this.weights_ih, inputs); // matrix multiplication    
+        var hidden = Matrix.multiply(this.weights_ih, inputs); // matrix multiplication    
         hidden.add(this.bias_hidden);                          // add bias of hidden nodes        
         hidden.map(sigmoid);                                   // activation function (sigmoid)
 
         // Generate output
-        let outputs = Matrix.multiply(this.weights_ho, hidden);
+        var outputs = Matrix.multiply(this.weights_ho, hidden);
         outputs.add(this.bias_output);
         outputs.map(sigmoid);
 
@@ -83,27 +83,27 @@ class NeuralNetwork_FF {
 
     train (inputs, targets_raw) {
         // predict
-        let output = this.feedforward(inputs);
-        let hidden = output.hidden;
-        let outputs = output.output;
+        var output = this.feedforward(inputs);
+        var hidden = output.hidden;
+        var outputs = output.output;
 
-        let targets = Matrix.fromArray(targets_raw);
+        var targets = Matrix.fromArray(targets_raw);
 
         // calculate output gradients
-        let output_errors = Matrix.subtract(targets, outputs);
-        let output_gradients = calculateGradients(outputs, derivative_sigmoid, output_errors, this.learning_rate);
+        var output_errors = Matrix.subtract(targets, outputs);
+        var output_gradients = calculateGradients(outputs, derivative_sigmoid, output_errors, this.learning_rate);
 
         // adjust the weights by deltas
-        let ho_deltas = calculateDeltas(output_gradients, hidden);
+        var ho_deltas = calculateDeltas(output_gradients, hidden);
         this.weights_ho.add(ho_deltas);
        
         // calculate hidden layer gradients
-        let weight_hoT = Matrix.transpose(this.weights_ho);
-        let hidden_errors = Matrix.multiply(weight_hoT, output_errors);
-        let hidden_gradients = calculateGradients(hidden, derivative_sigmoid, hidden_errors, this.learning_rate);
+        var weight_hoT = Matrix.transpose(this.weights_ho);
+        var hidden_errors = Matrix.multiply(weight_hoT, output_errors);
+        var hidden_gradients = calculateGradients(hidden, derivative_sigmoid, hidden_errors, this.learning_rate);
        
         // adjust the weights by deltas
-        let ih_deltas = calculateDeltas(hidden_gradients, Matrix.fromArray(inputs));
+        var ih_deltas = calculateDeltas(hidden_gradients, Matrix.fromArray(inputs));
         this.weights_ih.add(ih_deltas);
 
         // adjust the biases by gradients
@@ -136,7 +136,7 @@ class NeuralNetwork_FF {
         if(typeof data == 'string')
             data = JSON.deserialze(data);
         
-        let brain = new NeuralNetwork_FF(data.brain);
+        var brain = new NeuralNetwork_FF(data.brain);
     }
 
 }
