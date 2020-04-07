@@ -44,9 +44,11 @@ class CarManager{
     this.spawnCars(position,numberOfCars);
     }
 
-    nextGeneration(position,selection,mutateRate,deviation){
+    nextGeneration(position,pctSelection,mutateRate,deviation){
 
         //dobimo braine o prvih SELECTION najboljsih  avtov. 
+    let selection = Math.ceil(this.numberOfCars*pctSelection/100)
+    console.log(selection)
     let bestCarBrains=[]
     let currentBestCar;
     for (let i=0;i<selection;i++){
@@ -69,7 +71,7 @@ class CarManager{
     this.bestBrainsArray=[];
     for(let i=selection;i<this.numberOfCars;i++){
     let tmpBestCarBrains=bestCarBrains[i%selection].copy(); // tukaj izmed selekcije izberemo in jih zmutiramo (narejeno da se ekvivalentno reproducirajo)
-    tmpBestCarBrains.mutate(mutateRate,deviation);
+    tmpBestCarBrains.mutate(1,deviation);
     this.bestBrainsArray[i]=tmpBestCarBrains;
     }
 

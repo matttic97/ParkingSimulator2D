@@ -2,7 +2,7 @@ class Parkingspot extends CollidableSprite {
 
     constructor(gameObject,position, qadrant, occupied){
         size=new Vector2D(100, 50)
-        super(position, 'rect', size, (qadrant * 90));
+        super(position, 'rect', size, (qadrant* 90));
         this.occupied = occupied;
         this.objName="parkingspot"
         this.line_width = 10;
@@ -24,10 +24,9 @@ class Parkingspot extends CollidableSprite {
 
         noStroke(); 
         fill(255, 255, 255);
-        rect(0,0, this.size.X, this.size.Y);
-        rect(this.size.X / 2, 0, this.size.X, this.line_width);
-        rect(this.line_width / 2, this.size.Y / 2, this.line_width, this.size.Y);
-        rect(this.size.X / 2, this.size.Y, this.size.X, this.line_width);
+        rect(-this.size.X/2,0,this.line_width,this.size.Y);
+        rect(0,this.size.Y/2,this.size.X,this.line_width);
+        rect(0,-this.size.Y/2,this.size.X,this.line_width);
         noFill();
 
         if(this.occupied){

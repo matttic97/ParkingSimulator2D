@@ -8,8 +8,8 @@ class Game{
         this.ParkingspotManager = new ParkingspotManager(this);
         this.CarManager = new CarManager(this);
         this.MapManager = new MapManager(this)
-        this.parkingspot=this.ParkingspotManager.createParkingspot(new Vector2D(900, 600), 1, true);
-        this.CarManager.firstGeneration(new Vector2D(300, 100),30);
+        this.parkingspot=this.ParkingspotManager.createParkingspot(new Vector2D(900, 700), 3, false);
+        this.CarManager.firstGeneration(new Vector2D(300, 100),300);
         this.updateCycles=1
     }
 
@@ -28,7 +28,7 @@ class Game{
 
         let populationStatus=this.CarManager.update(keys);
         if(!populationStatus){
-        this.CarManager.nextGeneration(new Vector2D(300, 100),5,1,1) //pozicija,3-koliko izmed prvih avtov vzamemo, 1- verjetnost mutacije. 1- devijacija
+        this.CarManager.nextGeneration(new Vector2D(300, 100),10,0.1) //pozicija,10-koliko procentov izmed prvih avtov vzamemo,0.15-devijacija
         }
         
     }

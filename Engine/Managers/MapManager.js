@@ -7,33 +7,33 @@ class MapManager{
     }
 
     createMap(){
-
+    
         //1-avto
         //2-parking
         //3-zid
    let mapArray=[         
-        [3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
-        [3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3], 
-        [3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,0,0,0,0,3], 
-        [3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,0,0,0,0,3], 
-        [3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,0,0,0,0,3], 
-        [3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,3,3,0,0,0,3], 
-        [3,0,0,0,0,0,0,0,0,3,0,3,0,0,0,0,3,3,3,3,0,0,0,3], 
-        [3,0,0,3,3,3,3,0,0,3,0,3,0,0,0,0,0,0,0,0,0,0,0,3], 
-        [3,0,0,3,0,0,3,0,0,3,0,3,0,0,0,0,0,0,0,0,0,0,0,3], 
-        [3,0,0,3,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3], 
-        [3,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3], 
-        [3,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3], 
-        [3,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3], 
-        [3,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3], 
-        [3,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3], 
-        [3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], 
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], 
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], 
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0], 
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,3,3,0,0,0,0], 
+        [0,0,0,0,0,0,3,3,3,3,3,3,0,0,0,0,0,3,3,3,0,0,0,0], 
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], 
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], 
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], 
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,3,3,3,3,3,3,3,0,0], 
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], 
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], 
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], 
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], 
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
            
     ]
     let mapSize = [mapArray[0].length,mapArray.length] //resolucija naše mape
     let XDivide = canvasWidth / mapSize[0];
     let YDivide = canvasHeight / mapSize[1];
-
+    this.spawnborders(XDivide,YDivide);
 
         for(let x = 0; x < mapSize[0]; x++){
             for(let y = 0; y < mapSize[1]; y++){
@@ -46,8 +46,7 @@ class MapManager{
                     break;
 
                     case 2:
-                        //console.log(position)
-                        this.gameObject.ParkingspotManager.createParkingspot(position, 1, true);
+                        this.gameObject.ParkingspotManager.createParkingspot(position, 1, false);
                     break;
 
                     case 3:
@@ -58,7 +57,14 @@ class MapManager{
                 }
             }
         }
+   
     }
 
+spawnborders(XDivide,YDivide){
+    this.gameObject.WallManager.createWall(new Vector2D(XDivide/2,canvasHeight/2), new Vector2D(XDivide, canvasHeight), 0);
+    this.gameObject.WallManager.createWall(new Vector2D(canvasWidth-XDivide/2,canvasHeight/2), new Vector2D(XDivide, canvasHeight), 0);
+    this.gameObject.WallManager.createWall(new Vector2D(canvasWidth/2,YDivide/2), new Vector2D(canvasWidth, YDivide), 0);
+    this.gameObject.WallManager.createWall(new Vector2D(canvasWidth/2,canvasHeight-YDivide/2), new Vector2D(canvasWidth, YDivide), 0);
+}
 
 }
