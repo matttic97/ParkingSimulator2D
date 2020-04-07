@@ -1,6 +1,6 @@
 class Car extends CollidableSprite {
 
-    constructor(gameObject,position, angle, drivable,brains){
+    constructor(gameObject, position, angle, drivable,brains){
         super(position, 'rect', new Vector2D(40, 20), angle);
         this.gameObject=gameObject
         this.objName="car"
@@ -20,15 +20,18 @@ class Car extends CollidableSprite {
         this.maxspeed = 13;
         // for testing ->
         this.color = 'red';
-    
 
-        this.aliveTime=30*8 //5 sekund
-        this.score=0
+        this.senzors = new Senzors(gameObject, this, position, 100, angle)
+
+        this.alive = true;
+
+        this.aliveTime = 30*8 //5 sekund
+        this.score = 0
         if(brains){
 
             this.brains=brains.copy()
         }
-        else this.brains= new NeuralNetwork_FF(6,25,5,0.1) ;
+        else this.brains = new NeuralNetwork_FF(9, 25, 5, 0.1);
         /*
         inputs: objekt na levo,desno,spredaj,zadaj in razdalja do najblizjega prostega parking spota.
         outputs: naprej nazaj levo desno stop
@@ -36,23 +39,28 @@ class Car extends CollidableSprite {
     }
 
     think(){
+        let  distance = Vector2D.distance(this.position, this.gameObject.parkingspot.position)/canvasMaxPossibileDistance;
+        this.score = 1 - distance;
+        let input = [
+            distance, 
+            this.senzors.inter_array[0],
+            this.senzors.inter_array[1],
+            this.senzors.inter_array[2],
+            this.senzors.inter_array[3],
+            this.senzors.inter_array[4],
+            this.senzors.inter_array[5],
+            this.senzors.inter_array[6],
+            this.senzors.inter_array[7],
+        ];
+        
+        let output = this.brains.predict(input);
+        
         var keys = {}
-        let sensorinputs=new Array(5) //5 inputov bo
-        let  distancetest=Vector2D.distance(this.position,this.gameObject.parkingspot.position)/canvasMaxPossibileDistance 
-        this.score=1-distancetest
-        sensorinputs[0]=0.5+(this.gameObject.parkingspot.position.X-this.position.X)/(2*canvasWidth);
-        sensorinputs[1]=0.5+(this.gameObject.parkingspot.position.Y-this.position.Y)/(2*canvasHeight); //normiranje med 0 in 1
-        sensorinputs[2]=this.getCloseObject(1) //desno
-        sensorinputs[3]=this.getCloseObject(2) //gor
-        sensorinputs[4]=this.getCloseObject(3) //dol
-        sensorinputs[5]=this.getCloseObject(4) //dol
-        let values=this.brains.predict(sensorinputs);
-
-        if (values.data[0]>=0.5)keys['ArrowLeft']=1; //levo
-        if (values.data[1]>=0.5)keys['ArrowRight']=1;//desno
-        if (values.data[2]>=0.5)keys['ArrowUp']=1;//gor
-        if (values.data[3]>=0.5)keys['ArrowDown']=1;//dol
-        if (values.data[4]>=0.5)keys['Spacebar']=1;//stop
+        keys['ArrowLeft'] = output.data[0] >= 0.5;  //levo
+        keys['ArrowRight'] = output.data[1] >= 0.5; //desno
+        keys['ArrowUp'] = output.data[2] >= 0.5;    //gor
+        keys['ArrowDown'] = output.data[3] >= 0.5;  //dol
+        keys['Spacebar'] = output.data[4] >= 0.5;   //stop
         return keys;
     }
 
@@ -81,8 +89,9 @@ class Car extends CollidableSprite {
     
 
     draw() {
-
-
+        if(!this.alive)
+            return;
+            
         push();
         fill(this.color);
         stroke('black');   
@@ -91,44 +100,48 @@ class Car extends CollidableSprite {
         rect(0,0, this.size.X, this.size.Y);
         noFill();
         pop();
-            }
+        //this.senzors.draw();
+    }
 
     update(keys){
-         if(this.aliveTime>0)this.aliveTime--;
-        else this.drivable=false;
+        if(this.aliveTime > 0) this.aliveTime--;
+        else this.drivable = false;
 
         if(!this.drivable)return;
-         let keysnn=this.think()
+            keys = this.think();
+
         this.adjustSteerPower();
-        this.move(keysnn);
-        this.setCarDirection();  
+        this.move(keys);
+        this.setCarDirection(); 
+
         this.velocity = new Vector2D(this.car_direction.X, this.car_direction.Y);
         this.position.add(this.velocity);
         this.color = 'red';
-        this.checkCollision();      
 
+        this.senzors.update(this.position, this.angle);
+        this.checkCollision();           
     }
 
     move(keys){   
-    	
-
         if(keys['Spacebar']){
-        this.brake()
+            this.brake();
+            return;
         }
-        else{
+            
         if(keys['ArrowDown'])
             this.moveBack();
         else if(keys['ArrowUp'])
             this.moveOn();
         else 
             this.decelerate();
-        }
-        if(this.collided)return;
+
+        if(this.collided) return;
         if(keys['ArrowLeft'])
             this.moveLeft();
         else if(keys['ArrowRight'])
             this.moveRight();
-        else{this.rotating=0}
+        else
+            this.rotating = 0;
     }
     moveLeft(){
         if(math.abs(this.speed) > 0){
@@ -191,18 +204,18 @@ class Car extends CollidableSprite {
     }
 
     adjustSteerPower(){
-
         this.angle_power = this.angle_max_power * (1-math.exp(-2*math.abs(this.speed) / this.maxspeed));
     }
 
 
     checkCollision(){
-    this.collided=false
-    super.setCollider()
+        this.collided=false
+        super.setCollider()
 
-    this.checkCollisionWithOne(this.gameObject.WallManager.wallsArray); //za zide
-    this.checkCollisionWithOne(this.gameObject.ParkingspotManager.parkingspotsArray); //za parking spote
+        this.senzors.checkCollision();
 
+        this.checkCollisionWithOne(this.gameObject.WallManager.wallsArray); //za zide
+        this.checkCollisionWithOne(this.gameObject.ParkingspotManager.parkingspotsArray); //za parking spote
     }
 
 
@@ -217,15 +230,14 @@ class Car extends CollidableSprite {
 
         if(withObj.objName=="wall"){
   		this.stop();
-        this.drivable=false;
-        this.score=0.95*this.score;//zmanjsamo score ob zaboju za 40%
-    }
-       
-
+        this.drivable = false;
+        this.score = 0.95 * this.score;//zmanjsamo score ob zaboju za 40%
+        }
     }
 
     stop(){
-    	this.speed=0;
+        this.alive = false;
+    	this.speed = 0;
         this.velocity = Vector2D.zeros();
     }
 

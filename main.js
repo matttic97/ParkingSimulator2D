@@ -1,21 +1,23 @@
 var game;
-const canvasWidth=1200;
-const canvasHeight=800;
-const canvasMaxPossibileDistance=Math.sqrt(canvasWidth*canvasWidth+canvasHeight*canvasHeight)
+const canvasWidth = 1200;
+const canvasHeight = 800;
+const canvasMaxPossibileDistance = Math.sqrt(canvasWidth*canvasWidth+canvasHeight*canvasHeight);
+
 function setup(){
     createCanvas(canvasWidth, canvasHeight);
-    frameRate(30)
     rectMode(CENTER);
     angleMode(DEGREES);
+    
+    slider = createSlider(1, 100, 1);
 
     game = new Game(1);
 }
 
-function update(){
-	   
-}
 function draw(){
-	 game.update(keys);
+    game.setUpdateCycles(slider.value());
+    
+    game.update(keys);
+    
     game.draw();
 }
 
