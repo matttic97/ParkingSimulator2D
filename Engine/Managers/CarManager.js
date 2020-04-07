@@ -39,12 +39,12 @@ class CarManager{
         }
     }
 
-    firstGeneration(position,numberOfCars){ //inicializiramo prvo generacijo
-    this.numberOfCars=numberOfCars
-    this.spawnCars(position,numberOfCars);
+    firstGeneration(position, numberOfCars){ //inicializiramo prvo generacijo
+        this.numberOfCars = numberOfCars
+        this.spawnCars(position, numberOfCars);
     }
 
-    nextGeneration(position,pctSelection,mutateRate,deviation){
+    nextGeneration(position, pctSelection, deviation){
 
         //dobimo braine o prvih SELECTION najboljsih  avtov. 
     let selection = Math.ceil(this.numberOfCars*pctSelection/100)
@@ -52,7 +52,7 @@ class CarManager{
     let bestCarBrains=[]
     let currentBestCar;
     for (let i=0;i<selection;i++){
-         let bestCarScore=-99999;
+         let bestCarScore=-Infinity;
         for(let car of this.carsArray){
             if (car.score> bestCarScore){
                 bestCarScore=car.score;
@@ -61,7 +61,7 @@ class CarManager{
             }
         }
         for(let car of this.carsArray){
-            if(car.score==bestCarScore) car.score=-99999;
+            if((Vector2D.distance(car.position, currentBestCar.position) < currentBestCar.size.Y)) car.score = -Infinity; //izvzemi ven tiste ki so nagručeni
         }
     if((typeof bestCarBrains[i]!=='object')){bestCarBrains[i]=bestCarBrains[0].copy();}//če zmanjka unkiatnih avtov, se zapolnejo z taprvimi najboljšimi
  //s izkljucimo prvega najboljsega vn. in tako dalje da bo naslednji v arrayu bil drugi najboljši.
@@ -71,7 +71,7 @@ class CarManager{
     this.bestBrainsArray=[];
     for(let i=selection;i<this.numberOfCars;i++){
     let tmpBestCarBrains=bestCarBrains[i%selection].copy(); // tukaj izmed selekcije izberemo in jih zmutiramo (narejeno da se ekvivalentno reproducirajo)
-    tmpBestCarBrains.mutate(1,deviation);
+    tmpBestCarBrains.mutate(1, deviation);
     this.bestBrainsArray[i]=tmpBestCarBrains;
     }
 

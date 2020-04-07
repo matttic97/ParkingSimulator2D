@@ -28,7 +28,7 @@ class Game{
             //this.car.update(keys);
             let populationStatus=this.CarManager.update(keys);
             if(!populationStatus)
-                this.CarManager.nextGeneration(new Vector2D(300, 100), 10, 0.1) //pozicija,10-koliko procentov izmed prvih avtov vzamemo,0.15-devijacija
+                this.CarManager.nextGeneration(new Vector2D(300, 100), 4, 0.08) //pozicija,10-koliko procentov izmed prvih avtov vzamemo,0.15-devijacija
         }
     }
 
