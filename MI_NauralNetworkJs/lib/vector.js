@@ -35,7 +35,7 @@ class Vector2D{
         return [[vector.X], [vector.Y]];
     }
     static distance(v1,v2){
-        return Math.sqrt((v1.X-v2.X)*(v1.X-v2.X)+(v1.Y-v2.Y)*(v1.Y-v2.Y))
+        return math.distance(v1.Array, v2.Array);
     }
 
     /* OBJECT METHODS */
