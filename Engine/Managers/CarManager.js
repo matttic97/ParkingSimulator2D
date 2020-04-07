@@ -61,7 +61,7 @@ class CarManager{
             }
         }
         for(let car of this.carsArray){
-            if(car.score==bestCarScore) car.score=-99999;
+            if((Vector2D.distance(car.position,currentBestCar.position)<currentBestCar.size.Y)) car.score=-99999; //izvzemi ven tiste ki so nagručeni
         }
     if((typeof bestCarBrains[i]!=='object')){bestCarBrains[i]=bestCarBrains[0].copy();}//če zmanjka unkiatnih avtov, se zapolnejo z taprvimi najboljšimi
  //s izkljucimo prvega najboljsega vn. in tako dalje da bo naslednji v arrayu bil drugi najboljši.
