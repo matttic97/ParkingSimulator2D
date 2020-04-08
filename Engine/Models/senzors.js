@@ -58,7 +58,11 @@ class Senzor extends CollidableSprite {
     }
 
     checkCollisionWithOne(colliders){
-        colliders.map( (collider) => this.collision(collider));
+        var len=colliders.length;
+        for(var i=0; i<len;i++){
+        	colliders[i].collision(this)
+
+        }
     }
 
     collisionEvent(withObj, intersaction){
@@ -97,16 +101,25 @@ class Senzors {
 
     update(position, angle){
         // update all senzors
-        this.array.map((senzor) => senzor.update(position, angle));
+        var len=this.array.length;
+        for(var i=0;i<len;i++){
+        	this.array[i].update(position,angle)
+        }
     }
 
     draw(){
-        // draw all senzors
-        this.array.map((senzor) => senzor.draw());
+             var len=this.array.length;
+        for(var i=0;i<len;i++){
+        	this.array[i].draw()
+        }
     }
 
     checkCollision(){
-        this.array.map((senzor) => senzor.checkCollision());
+        var len=this.array.length;
+        for(var i=0;i<len;i++){
+        	this.array[i].checkCollision()
+        }
+
         this.array.map((senzor, i) => {this.inter_array[i][0] = senzor.intersaction / 1000;this.inter_array[i][1]=senzor.collidedObjName});
     }
     getSum(){

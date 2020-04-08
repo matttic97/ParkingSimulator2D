@@ -28,6 +28,8 @@ class Car extends CollidableSprite {
         this.drivenDistance=0;
         this.gameFrameCounter=0;
         this.bestScore=0;
+
+        this.prevPosition= new Vector2D(this.position.X,this.position.Y);
         if(brains){
 
             this.brains=brains.copy()
@@ -96,8 +98,6 @@ class Car extends CollidableSprite {
         this.velocity = new Vector2D(this.car_direction.X, this.car_direction.Y);
         this.position.add(this.velocity);
         this.color = 'red';
-
-        this.senzors.update(this.position, this.angle);
         this.checkCollision();      
 
 
@@ -192,7 +192,7 @@ class Car extends CollidableSprite {
     checkCollision(){
         this.collided=false
         super.setCollider()
-
+        this.senzors.update(this.position, this.angle);
         this.senzors.checkCollision();
 
         // malo optimizacije dokler ne nardim quadThree-ja 
@@ -205,7 +205,11 @@ class Car extends CollidableSprite {
 
 
     checkCollisionWithOne(colliders){
-        colliders.map( (collider) => this.collision(collider));
+        var len=colliders.length;
+        for(var i=0; i<len;i++){
+        	colliders[i].collision(this)
+
+        }
     }
 
     collisionEvent(withObj){
@@ -215,7 +219,7 @@ class Car extends CollidableSprite {
         if(withObj.objName=="wall"){
   		this.stop();
         this.drivable = false;
-        this.score = 0.90 * this.score;//zmanjsamo score ob zaboju za 40%
+        this.score = 0.80 * this.score;//zmanjsamo score ob zaboju za 20%
         }
     }
 
@@ -237,10 +241,13 @@ class Car extends CollidableSprite {
 
 
 
-		if((this.drivenDistance-this.prevDrivenDistance)<math.abs(this.maxspeed*this.timeToCheck/8)){this.drivable=false;}
-		this.prevDrivenDistance=this.drivenDistance;   	
+		//if((this.drivenDistance-this.prevDrivenDistance)<math.abs(this.maxspeed*this.timeToCheck/8)){this.drivable=false;}
+		//this.prevDrivenDistance=this.drivenDistance;   	
 
-		if(math.abs(abs(this.score)-abs(this.bestScore))<(this.size.Y/canvasMaxPossibileDistance)){this.drivable=false;}
+		if(Vector2D.distance(this.position,this.prevPosition)<math.abs(this.maxspeed*this.timeToCheck/8)){this.drivable=false;} 	
+		this.prevPosition= new Vector2D(this.position.X,this.position.Y);
+
+		if((this.score-this.bestScore)<(this.size.X/canvasWidth)){this.drivable=false;}
 		if(this.score>this.bestScore)this.bestScore=this.score;
 
 

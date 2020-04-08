@@ -10,18 +10,18 @@ class CarManager{
 
 
     draw() {
-        for(var car of this.carsArray){
-            car.draw()
+        for(var i=0;i<this.numberOfCars;i++){
+            this.carsArray[i].draw()
         }
     }
 
     update(keys){ //update nam returna FALSE, kadar se vsi avti zabijejo ali izteče čas avtu.(ko postane drivable=false)
         var disabedCars=0;
-        for(var car of this.carsArray){
-            car.update(keys)
-            if (car.drivable==false)disabedCars++;
+        for(var i=0;i<this.numberOfCars;i++){
+            this.carsArray[i].update(keys)
+            if (this.carsArray[i].drivable==false)disabedCars++;
        }
-       if (disabedCars>=this.carsArray.length) return false;
+       if (disabedCars>=this.numberOfCars) return false;
        else return true;
     }
 
