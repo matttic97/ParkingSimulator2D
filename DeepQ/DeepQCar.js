@@ -1,6 +1,6 @@
-class Car extends CollidableSprite {
+class DeepQCar extends CollidableSprite {
 
-    constructor(gameObject, position, angle, drivable,brains){
+    constructor(gameObject, position, angle, drivable,){
         super(position, 'rect', new Vector2D(40, 20), angle);
         this.gameObject=gameObject
         this.objName="car"
@@ -8,33 +8,35 @@ class Car extends CollidableSprite {
         this.drivable = drivable;
         this.collided=false;
         this.angle_power = 0;
-        this.angle_max_power = 3;
+        this.angle_max_power = 4;
         this.velocity = Vector2D.zeros();
         this.car_direction = Vector2D.zeros();
         this.rotating=0 // -1 left, 1 right
         this.gear = 0;  // -1=reverse, 0=neutral, 1=forward
-        this.acceleration = 0.2
-        this.friction = 0.06
-        this.brakeFriction=0.7;
+        this.acceleration = 0.5
+        this.friction = 0.1
+        this.brakeFriction=1;
         this.speed = 0;
-        this.maxspeed = 4;
+        this.maxspeed = 7;
         // for testing ->
-        this.color = 'red';
+        this.color = 'blue';
+
+        this.prevPosition=new Vector2D(this.position.X,this.position.Y)
         
+        this.pressedKey;
         this.senzors = new Senzors(gameObject, this, position, 100, angle)
-        this.timeToCheck = 30*4//  sekund
-        this.score = 0
+        this.timeToCheck = 30*20//  sekund
         this.prevDrivenDistance=0;
         this.drivenDistance=0;
         this.gameFrameCounter=0;
-        this.bestScore=0;
         this.brainsTimestapmArray=[];
         this.prevPosition= new Vector2D(this.position.X,this.position.Y);
-        if(brains){
-
-            this.brains=brains.copy()
-        }
-        else this.brains = new NeuralNetwork_FF(10, 25, 5, 0.1);
+        this.action=0;
+        this.observation=null;
+        this.newObservation;
+        this.done=false;
+        this.currentReward=0;
+        this.brains = new DeepQBrains(10,4);
         /*
         inputs: objekt na levo,desno,spredaj,zadaj in razdalja do najblizjega prostega parking spota.
         outputs: naprej nazaj levo desno stop
@@ -43,9 +45,24 @@ class Car extends CollidableSprite {
 
     think(){
      
-        var Xdistance=0.5+(this.gameObject.parkingspot.position.X-this.position.X)/(2*canvasWidth);
-        var Ydistance=0.5+(this.gameObject.parkingspot.position.Y-this.position.Y)/(2*canvasHeight); 
-        var input = [
+
+        var output = this.brains.getAction(this.observation);
+  
+        this.action=output;
+        var keys = {}
+        switch (output){
+        	case 0: keys['ArrowDown']=true;break;
+        	case 1: keys['ArrowLeft']=true;break;
+        	case 2: keys['ArrowRight']=true;break;
+       		case 3: keys['ArrowUp'] = true;break;
+           
+    	}
+
+         this.pressedKey=keys;
+
+    var Xdistance=0.5+(this.gameObject.parkingspot.position.X-this.position.X)/(2*canvasWidth);
+    var Ydistance=0.5+(this.gameObject.parkingspot.position.Y-this.position.Y)/(2*canvasHeight); 
+    this.newObservation= [
             Xdistance,
             Ydistance, 
             this.senzors.inter_array[0][0],
@@ -57,22 +74,13 @@ class Car extends CollidableSprite {
             this.senzors.inter_array[6][0],
             this.senzors.inter_array[7][0],
         ];
-        
-        var output = this.brains.predict(input);
-       // this.brainsTimestapmArray.push(input,brainsOut);
-        var keys = {}
-        keys['ArrowLeft'] = output.data[0] >= 0.5;  //levo
-        keys['ArrowRight'] = output.data[1] >= 0.5; //desno
-        keys['ArrowUp'] = output.data[2] >= 0.5;    //gor
-        keys['ArrowDown'] = output.data[3] >= 0.5;  //dol
-        keys['Spacebar'] = output.data[4] >= 0.5;   //stop
-        return keys;
+      
+       
     }
 
 
     draw() {
-        if(!this.drivable)
-            return;
+        if(!this.drivable)return;
 
         push();
         fill(this.color);
@@ -86,19 +94,38 @@ class Car extends CollidableSprite {
     }
 
     update(keys){
-    	this.gameFrameCounter++;
-    	this.updateScore();
+    
         if(!this.drivable)return;
-        keys = this.think();
+        if(!(this.gameFrameCounter%10))this.think();
+        this.carUpdate(this.pressedKey); //določi se reward
+        if(!(this.gameFrameCounter%10)||this.done){this.brainUpdate();}//reward se samodejno notri vkljucu
+        this.gameFrameCounter++;
 
+       
+       
+    }
+
+    carUpdate(keys){
+
+        this.currentReward=0;
+        this.updateScore();
         this.adjustSteerPower();
         this.move(keys);
         this.setCarDirection(); 
-
         this.velocity = new Vector2D(this.car_direction.X, this.car_direction.Y);
         this.position.add(this.velocity);
-        this.color = 'red';
-        this.checkCollision();      
+        this.color = 'blue';
+        this.checkCollision();   
+        this.drivable=!this.done
+ 
+
+    }
+
+    brainUpdate(){
+
+    if (this.observation)this.brains.addToMemory(new Expirience(this.observation,this.action,this.newObservation,this.currentReward,this.done));
+        this.brains.train(this.done); 
+        this.observation=this.newObservation.slice();
 
 
     }
@@ -218,8 +245,14 @@ class Car extends CollidableSprite {
 
         if(withObj.objName=="wall"){
   		this.stop();
-        this.drivable = false;
-        this.score = 0.80 * this.score;//zmanjsamo score ob zaboju za 20%
+        this.done=true;
+        this.currentReward-=10;
+        }
+
+
+        if(withObj.objName=="parkingspot"){
+        this.done=true;
+        this.currentReward+=10;
         }
     }
 
@@ -232,23 +265,20 @@ class Car extends CollidableSprite {
     updateScore(){
 
   	var distance = Vector2D.distance(this.position, this.gameObject.parkingspot.position)/canvasMaxPossibileDistance;
-    this.score = Math.pow((1 - distance),2);
+    this.currentReward = Math.pow((1 - distance),2)*4;
     
     this.drivenDistance+=math.abs(this.speed);
 
-    if(!(this.gameFrameCounter%this.timeToCheck)){
+    if(!((this.gameFrameCounter+1)%this.timeToCheck)){
 		
 
-
+        this.done=true
 
 		//if((this.drivenDistance-this.prevDrivenDistance)<math.abs(this.maxspeed*this.timeToCheck/8)){this.drivable=false;}
 		//this.prevDrivenDistance=this.drivenDistance;   	
 
-		if(Vector2D.distance(this.position,this.prevPosition)<math.abs(this.maxspeed*this.timeToCheck/8)){this.drivable=false;} 	
-		this.prevPosition= new Vector2D(this.position.X,this.position.Y);
-
-		if((this.score-this.bestScore)<(this.size.X/canvasWidth)){this.drivable=false;}
-		if(this.score>this.bestScore)this.bestScore=this.score;
+		//if(Vector2D.distance(this.position,this.prevPosition)<math.abs(this.maxspeed*this.timeToCheck/8)){this.done=true;} 	
+		//this.prevPosition= new Vector2D(this.position.X,this.position.Y);
 
 
     }

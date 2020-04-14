@@ -5,6 +5,12 @@ class CarManager{
         this.carIndex=0;
         this.gameObject=gameObject
         this.numberOfCars=0;
+        this.carLoaded=false;
+        this.loadedCarBrains;
+        this.positionX;
+        this.positionY;
+        this.deviation;
+        this.pctSelection;
     }
 
 
@@ -21,8 +27,8 @@ class CarManager{
             this.carsArray[i].update(keys)
             if (this.carsArray[i].drivable==false)disabedCars++;
        }
-       if (disabedCars>=this.numberOfCars) return false;
-       else return true;
+       if (disabedCars>=this.numberOfCars) this.nextGeneration(this.pctSelection,this.deviation);
+
     }
 
     createCar(position,angle,drivable){
@@ -39,16 +45,19 @@ class CarManager{
         }
     }
 
-    firstGeneration(position, numberOfCars){ //inicializiramo prvo generacijo
+    firstGeneration(position, numberOfCars,pctSelection,deviation){ //inicializiramo prvo generacijo
         this.numberOfCars = numberOfCars
+        this.positionX=position.X
+        this.pctSelection=pctSelection
+        this.deviation=deviation
+        this.positionY=position.Y
         this.spawnCars(position, numberOfCars);
     }
 
-    nextGeneration(position, pctSelection, deviation){
+    nextGeneration( pctSelection, deviation){
 
         //dobimo braine o prvih SELECTION najboljsih  avtov. 
     var selection = Math.ceil(this.numberOfCars*pctSelection/100)
-    console.log(selection)
     var bestCarBrains=[]
     var currentBestCar;
     for (var i=0;i<selection;i++){
@@ -79,11 +88,26 @@ class CarManager{
      this.bestBrainsArray[i]=bestCarBrains[i].copy(); //da ševedno ohranimo ta prvih SELECTION  najbočših ce so drugi slabsi.
         }    
    
+    if(this.carLoaded){
+    this.bestBrainsArray[0]=this.loadedCarBrains;
+    this.carLoaded=false;
+
+    }
     this.carsArray=[];
     this.carIndex=0;
-    this.spawnCars(position,this.numberOfCars);
+    this.spawnCars(new Vector2D(this.positionX,this.positionY),this.numberOfCars);
+    }
+    
+    saveBestCar(){
+    return this.bestBrainsArray[0].copy();
+
+
     }
 
+    loadBestCar(filedata){
+        this.loadedCarBrains=filedata
+        this.carLoaded=true;
+    }
 
 
 }

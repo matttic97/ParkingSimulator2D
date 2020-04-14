@@ -6,10 +6,11 @@ class Game{
         this.WallManager = new WallManager(this);
         this.ParkingspotManager = new ParkingspotManager(this);
         this.CarManager = new CarManager(this);
+        this.deepQCarManager = new DeepQCarManager(this);
         this.MapManager = new MapManager(this)
-        this.parkingspot=this.ParkingspotManager.createParkingspot(new Vector2D(900, 700), 3, false);
-        this.CarManager.firstGeneration(new Vector2D(300, 100), 100);
-        //this.car = new Car(this, new Vector2D(400, 200), 0, true, null)
+        this.parkingspot=this.ParkingspotManager.createParkingspot(new Vector2D(100, 400), 3, false);
+        this.CarManager.firstGeneration(new Vector2D(300, 100), 5,20,0.5);
+        this.deepQCarManager.firstEpisode(new Vector2D(300, 100),1);
         this.updateCycles = updateCycles;
     }
 
@@ -18,17 +19,18 @@ class Game{
         this.ParkingspotManager.draw();
         this.WallManager.draw();
         this.CarManager.draw();
-        //this.car.draw();
+        this.deepQCarManager.draw();
+       
     }
 
     update(keys){
         for(var i = 0; i < this.updateCycles; i++){
             this.ParkingspotManager.update()
             this.WallManager.update();
-            //this.car.update(keys);
-            var populationStatus=this.CarManager.update(keys);
-            if(!populationStatus)
-                this.CarManager.nextGeneration(new Vector2D(300, 100), 8, 0.8) //pozicija,10-koliko procentov izmed prvih avtov vzamemo,0.15-devijacija
+         
+            this.CarManager.update(keys);
+            this.deepQCarManager.update(keys);
+            
         }
     }
 
