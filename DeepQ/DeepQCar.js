@@ -25,12 +25,10 @@ class DeepQCar extends CollidableSprite {
         
         this.pressedKey;
         this.senzors = new Senzors(gameObject, this, position, 100, angle)
-        this.timeToCheck = 30*20//  sekund
-        this.prevDrivenDistance=0;
-        this.drivenDistance=0;
+        this.timeToCheck = 30*30//  sekund
+        this.prevDistance=Vector2D.distance(this.position, this.gameObject.parkingspot.position)/canvasMaxPossibileDistance;;
         this.gameFrameCounter=0;
         this.brainsTimestapmArray=[];
-        this.prevPosition= new Vector2D(this.position.X,this.position.Y);
         this.action=0;
         this.observation=null;
         this.newObservation;
@@ -96,9 +94,9 @@ class DeepQCar extends CollidableSprite {
     update(keys){
     
         if(!this.drivable)return;
-        if(!(this.gameFrameCounter%10))this.think();
+        if(!(this.gameFrameCounter%5))this.think();
         this.carUpdate(this.pressedKey); //določi se reward
-        if(!(this.gameFrameCounter%10)||this.done){this.brainUpdate();}//reward se samodejno notri vkljucu
+        if(!(this.gameFrameCounter%5)||this.done){this.brainUpdate();}//reward se samodejno notri vkljucu
         this.gameFrameCounter++;
 
        
@@ -123,8 +121,8 @@ class DeepQCar extends CollidableSprite {
 
     brainUpdate(){
 
-    if (this.observation)this.brains.addToMemory(new Expirience(this.observation,this.action,this.newObservation,this.currentReward,this.done));
-        this.brains.train(this.done); 
+    if (this.observation)this.brains.addToMemory(this.observation,this.action,this.newObservation,this.currentReward,this.done);
+        for(var i=0;i<2;i++){this.brains.train(this.done); if(this.done)break; }
         this.observation=this.newObservation.slice();
 
 
@@ -223,7 +221,7 @@ class DeepQCar extends CollidableSprite {
         this.senzors.checkCollision();
 
         // malo optimizacije dokler ne nardim quadThree-ja 
-        if(this.senzors.getSum()> 0.1){
+        if(this.senzors.getSum()> 0){
             this.checkCollisionWithOne(this.gameObject.WallManager.wallsArray); //za zide
             this.checkCollisionWithOne(this.gameObject.ParkingspotManager.parkingspotsArray); //za parking spote
         }
@@ -240,19 +238,20 @@ class DeepQCar extends CollidableSprite {
     }
 
     collisionEvent(withObj){
+      
     	this.collided=true;
         this.color="white"
 
         if(withObj.objName=="wall"){
   		this.stop();
         this.done=true;
-        this.currentReward-=10;
+        this.currentReward-=50;
         }
 
 
         if(withObj.objName=="parkingspot"){
         this.done=true;
-        this.currentReward+=10;
+        this.currentReward+=150;
         }
     }
 
@@ -263,9 +262,11 @@ class DeepQCar extends CollidableSprite {
     }
 
     updateScore(){
-
+    
   	var distance = Vector2D.distance(this.position, this.gameObject.parkingspot.position)/canvasMaxPossibileDistance;
-    this.currentReward = Math.pow((1 - distance),2)*4;
+    this.currentReward += (this.prevDistance-distance)*500;
+    this.currentReward+=(distance*canvasMaxPossibileDistance/1000)
+    this.prevDistance=Vector2D.distance(this.position, this.gameObject.parkingspot.position)/canvasMaxPossibileDistance;
     
     this.drivenDistance+=math.abs(this.speed);
 

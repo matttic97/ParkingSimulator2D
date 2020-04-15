@@ -196,7 +196,7 @@ class Car extends CollidableSprite {
         this.senzors.checkCollision();
 
         // malo optimizacije dokler ne nardim quadThree-ja 
-        if(this.senzors.getSum()> 0.1){
+        if(this.senzors.getSum()> 0){
             this.checkCollisionWithOne(this.gameObject.WallManager.wallsArray); //za zide
             this.checkCollisionWithOne(this.gameObject.ParkingspotManager.parkingspotsArray); //za parking spote
         }

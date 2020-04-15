@@ -54,7 +54,7 @@ class Senzor extends CollidableSprite {
         super.setCollider()
 
         this.checkCollisionWithOne(this.gameObject.WallManager.wallsArray); //za zide
-        //this.checkCollisionWithOne(this.gameObject.ParkingspotManager.parkingspotsArray); //za parking spote
+        this.checkCollisionWithOne(this.gameObject.ParkingspotManager.parkingspotsArray); //za parking spote
     }
 
     checkCollisionWithOne(colliders){
@@ -68,7 +68,11 @@ class Senzor extends CollidableSprite {
     collisionEvent(withObj, intersaction){
         this.collided = true;
         this.collidedObjName=withObj.objName
-        if(withObj.objName == "wall"){
+        if(withObj.objName=="parkingspot"){
+            this.intersaction = intersaction;
+            this.color = 'red';
+        }
+        else  if(withObj.objName == "wall"){
             this.intersaction = intersaction;
             this.color = 'red';
         }

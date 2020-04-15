@@ -7,23 +7,24 @@ class DeepQBrains{
 
 constructor(carInputs,carActions){
 
-this.learningRate=0.1; //še za implementirat
+this.learningRate=0.005; //še za implementirat
 this.exploration=1;
-this.decay=0.0001
-this.discount=0.98
+this.minExploration=0.1;
+this.decay=0.004
+this.discount=0.99
 ////////////////////////
 this.currentStep=0;
 this.actionslength=carActions
 
 //////////////////////
-this.policyNetwork= new NeuralNetwork_FF(carInputs,60,carActions,this.learningRate);
+this.policyNetwork= new NeuralNetwork_FF(carInputs,30,carActions,this.learningRate);
 this.targetNetwork= this.policyNetwork.copy();
 this.updateTargetCount=0;
-this.updateTargetAt=3;
+this.updateTargetAt=4;
 /////////////////////
-this.replayMemoryCapacity=30000;
+this.replayMemoryCapacity=50000;
 this.replayMmemory=[]
-this.miniBatchSize=2;
+this.miniBatchSize=64;
 this.replayMmemoryCount=0;
 }
 
@@ -41,8 +42,8 @@ var qStates=Matrix.transpose(this.policyNetwork.predict(state));
 qStates=qStates.data
 var indexOfMaxVal=indexOfMax(...qStates)
 action=indexOfMaxVal;
-console.log(...qStates)
-console.log(action)
+//console.log(...qStates)
+//console.log(this.exploration*100+" action "+action)
 
 }
 this.currentStep++;
@@ -54,6 +55,7 @@ return action;
 train(lastState){
 
 var miniBatch =this.getMemorySample()
+
 if(!miniBatch){return};//če ni dovolj velik batch, ne treniraj.
 var currentStates=miniBatch.map(function(value,i){return value.state}) //dobimo vse predhodne state iz batch memory
 var currentQValues=this.policyNetwork.predictArray(currentStates); //dobimo predvidevane q valute glede na te state
@@ -84,12 +86,12 @@ this.policyNetwork.trainArray(X,Y)
 if(lastState){
 	
 	this.updateTargetCount++;
-	this.exploration-=this.decay;
-	console.log(this.exploration)
+	if(this.exploration>this.minExploration)this.exploration*=(1-this.decay);
+	//console.log(this.exploration)
 
 	
 }
-if (this.updateTargetCount>this.updateTargetAt){
+if (this.updateTargetCount>=this.updateTargetAt){
 
 this.targetNetwork=this.policyNetwork.copy();
 this.updateTargetCount=0;
@@ -102,7 +104,8 @@ this.updateTargetCount=0;
 /////////////////////////////////////////////////
 
 
-addToMemory(expirience){
+addToMemory(...expiriences){
+var expirience=new Expirience(...expiriences)
 if (this.replayMmemory<this.replayMemoryCapacity){
 this.replayMmemory.push(expirience)
 }
