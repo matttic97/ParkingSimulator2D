@@ -9,7 +9,7 @@ class Game{
         this.deepQCarManager = new DeepQCarManager(this);
         this.MapManager = new MapManager(this)
         this.parkingspot=this.ParkingspotManager.createParkingspot(new Vector2D(200, 400), 3, false);
-        this.CarManager.firstGeneration(new Vector2D(300, 100), 5,20,0.5);
+        //this.CarManager.firstGeneration(new Vector2D(300, 100), 5,20,0.5);
         this.deepQCarManager.firstEpisode(new Vector2D(300, 100),1);
         this.updateCycles = updateCycles;
     }

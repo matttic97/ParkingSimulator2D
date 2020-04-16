@@ -6,6 +6,9 @@ const canvasMaxPossibileDistance = Math.sqrt(canvasWidth*canvasWidth+canvasHeigh
 var buttonSave;
 var buttonLoad;
 
+var buttonQSave;
+var buttonQLoad;
+
 function setup(){
     createCanvas(canvasWidth, canvasHeight);
     rectMode(CENTER);
@@ -15,6 +18,10 @@ function setup(){
     buttonSave =createButton('saveBest')
     buttonLoad =createFileInput(loadBest)
     buttonSave.mousePressed(saveBest)
+
+    buttonQSave =createButton('saveBestQ')
+    buttonQLoad =createFileInput(loadBestQ)
+    buttonQSave.mousePressed(saveBestQ)
 
     game = new Game(1,1);
 }
@@ -47,6 +54,23 @@ function loadBest(file){
 function saveBest(){
 
 var objdataString=game.CarManager.saveBestCar()
+
+saveJSON(objdataString,'car.json');
+
+
+}
+
+
+function loadBestQ(file){
+
+    var base64Str=file.data.split(",")[1]
+    var jsonStr=atob(base64Str)
+    game.deepQCarManager.loadBestQCar(jsonStr)
+}
+
+function saveBestQ(){
+
+var objdataString=game.deepQCarManager.saveBestQCar()
 
 saveJSON(objdataString,'car.json');
 

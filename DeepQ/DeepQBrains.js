@@ -7,22 +7,22 @@ class DeepQBrains{
 
 constructor(carInputs,carActions){
 
-this.learningRate=0.005; //še za implementirat
+this.learningRate=0.0001; //še za implementirat
 this.exploration=1;
 this.minExploration=0.1;
-this.decay=0.004
-this.discount=0.99
+this.decay=0.0001
+this.discount=0.7
 ////////////////////////
 this.currentStep=0;
 this.actionslength=carActions
 
 //////////////////////
-this.policyNetwork= new NeuralNetwork_FF(carInputs,30,carActions,this.learningRate);
+this.policyNetwork= new NeuralNetwork_FF(carInputs,100,carActions,this.learningRate);
 this.targetNetwork= this.policyNetwork.copy();
 this.updateTargetCount=0;
-this.updateTargetAt=4;
+this.updateTargetAt=1;
 /////////////////////
-this.replayMemoryCapacity=50000;
+this.replayMemoryCapacity=300000;
 this.replayMmemory=[]
 this.miniBatchSize=64;
 this.replayMmemoryCount=0;
@@ -87,7 +87,7 @@ if(lastState){
 	
 	this.updateTargetCount++;
 	if(this.exploration>this.minExploration)this.exploration*=(1-this.decay);
-	//console.log(this.exploration)
+	console.log(this.exploration)
 
 	
 }
@@ -176,4 +176,23 @@ function indexOfMax(arr) {
     }
 
     return maxIndex;
+}
+
+class SumTree{
+
+constructor(capacity){
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
 }

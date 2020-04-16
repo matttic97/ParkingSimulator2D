@@ -67,13 +67,30 @@ class DeepQCarManager{
         for(var i =0;i<this.numberOfCars;i++){
             this.bestBrainsArray[i]=this.carsArray[i].brains.copy()
         }
+
+        if(this.carLoaded){
+
+            this.bestBrainsArray[0]=this.loadedCarBrains;
+            this.carLoaded=false;
+        }
+
         this.carsArray=[]
         this.carIndex=0;
         this.spawnCars(new Vector2D(this.positionX,this.positionY))
 
     }
-    saveBestQCar(){}
-    loadQCar(brains){}
+        
+    saveBestQCar(){
+    return this.bestBrainsArray[0];
+
+
+    }
+
+    loadBestQCar(filedata){
+        this.loadedCarBrains=JSON.parse(filedata)
+        this.loadedCarBrains[0]=NeuralNetwork_FF.deserialize(this.loadedCarBrains[0])
+        this.carLoaded=true;
+    }
 
 
 }

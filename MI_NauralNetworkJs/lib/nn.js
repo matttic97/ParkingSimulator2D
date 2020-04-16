@@ -166,8 +166,7 @@ class NeuralNetwork_FF {
     }
 
     static deserialize(data){
-    data = JSON.parse(data);
-    console.log(data)
+        if(typeof data =='string')data = JSON.parse(data);
    var nn= new NeuralNetwork_FF(data.input_nodes,data.hidden_nodes,data.output_nodes,data.learning_rate)
    nn.weights_ih=Matrix.deserialize(data.weights_ih)
     nn.weights_ho=Matrix.deserialize(data.weights_ho)

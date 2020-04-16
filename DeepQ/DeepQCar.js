@@ -223,8 +223,9 @@ class DeepQCar extends CollidableSprite {
         // malo optimizacije dokler ne nardim quadThree-ja 
         if(this.senzors.getSum()> 0){
             this.checkCollisionWithOne(this.gameObject.WallManager.wallsArray); //za zide
-            this.checkCollisionWithOne(this.gameObject.ParkingspotManager.parkingspotsArray); //za parking spote
+       
         }
+             this.checkCollisionWithOne(this.gameObject.ParkingspotManager.parkingspotsArray); //za parking spote
     }
 
 
@@ -265,7 +266,7 @@ class DeepQCar extends CollidableSprite {
     
   	var distance = Vector2D.distance(this.position, this.gameObject.parkingspot.position)/canvasMaxPossibileDistance;
     this.currentReward += (this.prevDistance-distance)*500;
-    this.currentReward+=(distance*canvasMaxPossibileDistance/1000)
+    this.currentReward+=(distance*canvasMaxPossibileDistance/3000)
     this.prevDistance=Vector2D.distance(this.position, this.gameObject.parkingspot.position)/canvasMaxPossibileDistance;
     
     this.drivenDistance+=math.abs(this.speed);
