@@ -34,7 +34,7 @@ class Car extends CollidableSprite {
 
             this.brains=brains.copy()
         }
-        else this.brains = new NeuralNetwork_FF(10, 25, 5, 0.1);
+        else this.brains = new NeuralNetwork_FF(12, 40, 5, 0.1);
         /*
         inputs: objekt na levo,desno,spredaj,zadaj in razdalja do najblizjega prostega parking spota.
         outputs: naprej nazaj levo desno stop
@@ -46,6 +46,8 @@ class Car extends CollidableSprite {
         var Xdistance=0.5+(this.gameObject.parkingspot.position.X-this.position.X)/(2*canvasWidth);
         var Ydistance=0.5+(this.gameObject.parkingspot.position.Y-this.position.Y)/(2*canvasHeight); 
         var input = [
+            Math.abs(this.speed)/this.maxspeed,
+            this.angle/360,
             Xdistance,
             Ydistance, 
             this.senzors.inter_array[0][0],

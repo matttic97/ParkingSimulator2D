@@ -1,12 +1,13 @@
 class Senzor extends CollidableSprite {
 
-    constructor(color, game, position, senzor_length, angle, offset){
+    constructor(sensorManager,color, game, position, senzor_length, angle, offset){
         super(position, 'line', senzor_length, angle, offset);
 
         this.color = color
         this.collidedObjName="none"
         this.gameObject = game;
         this.intersaction = 0;
+        this.sensorManager=sensorManager;
     }
 
     setCollider(){
@@ -54,7 +55,7 @@ class Senzor extends CollidableSprite {
         super.setCollider()
 
         this.checkCollisionWithOne(this.gameObject.WallManager.wallsArray); //za zide
-      //  this.checkCollisionWithOne(this.gameObject.ParkingspotManager.parkingspotsArray); //za parking spote
+        this.checkCollisionWithOne(this.gameObject.ParkingspotManager.parkingspotsArray); //za parking spote
     }
 
     checkCollisionWithOne(colliders){
@@ -71,10 +72,12 @@ class Senzor extends CollidableSprite {
         if(withObj.objName=="parkingspot"){
             this.intersaction = intersaction;
             this.color = 'red';
+            this.sensorManager.objType=0;
         }
         else  if(withObj.objName == "wall"){
             this.intersaction = intersaction;
             this.color = 'red';
+            this.sensorManager.objType=1;
         }
             
     }
@@ -88,16 +91,16 @@ class Senzors {
         this.position = position;
         this.senzor_length = senzor_length;
         this.angle = angle;
-
+        this.objType=0;
         this.array = [
-            new Senzor('green', game, position, senzor_length, angle, new Vector2D(senzor_length, 0)),
-            new Senzor('green', game, position, senzor_length/2, angle, new Vector2D(-senzor_length/2, 0)),
-            new Senzor('green', game, position, senzor_length/2, angle, new Vector2D(senzor_length/2, senzor_length/2)),
-            new Senzor('green', game, position, senzor_length/2, angle, new Vector2D(senzor_length/2, -senzor_length/2)),
-            new Senzor('green', game, position, senzor_length/2, angle, new Vector2D(-senzor_length/2, senzor_length/2)),
-            new Senzor('green', game, position, senzor_length/2, angle, new Vector2D(-senzor_length/2, -senzor_length/2)),
-            new Senzor('green', game, position, senzor_length/2, angle, new Vector2D(0, senzor_length/2)),
-            new Senzor('green', game, position, senzor_length/2, angle, new Vector2D(0, -senzor_length/2)),
+            new Senzor(this,'green', game, position, senzor_length, angle, new Vector2D(senzor_length, 0)),
+            new Senzor(this,'green', game, position, senzor_length/2, angle, new Vector2D(-senzor_length/2, 0)),
+            new Senzor(this,'green', game, position, senzor_length/2, angle, new Vector2D(senzor_length/2, senzor_length/2)),
+            new Senzor(this,'green', game, position, senzor_length/2, angle, new Vector2D(senzor_length/2, -senzor_length/2)),
+            new Senzor(this,'green', game, position, senzor_length/2, angle, new Vector2D(-senzor_length/2, senzor_length/2)),
+            new Senzor(this,'green', game, position, senzor_length/2, angle, new Vector2D(-senzor_length/2, -senzor_length/2)),
+            new Senzor(this,'green', game, position, senzor_length/2, angle, new Vector2D(0, senzor_length/2)),
+            new Senzor(this,'green', game, position, senzor_length/2, angle, new Vector2D(0, -senzor_length/2)),
         ];
 
         this.inter_array = [[0,"none"], [0,"none"], [0,"none"], [0,"none"], [0,"none"], [0,"none"], [0,"none"], [0,"none"]];

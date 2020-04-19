@@ -8,10 +8,12 @@ class Game{
         this.CarManager = new CarManager(this);
         this.deepQCarManager = new DeepQCarManager(this);
         this.MapManager = new MapManager(this)
-        this.parkingspot=this.ParkingspotManager.createParkingspot(new Vector2D(200, 400), 3, false);
-        //this.CarManager.firstGeneration(new Vector2D(300, 100), 5,20,0.5);
-        this.deepQCarManager.firstEpisode(new Vector2D(300, 100),1);
+        this.parkingspot=this.ParkingspotManager.createParkingspot(new Vector2D(900, 700), 0, true);
+       //this.CarManager.firstGeneration(new Vector2D(300, 100), 50,8,0.5);
+       this.deepQCarManager.firstEpisode(new Vector2D(300, 150),1);
         this.updateCycles = updateCycles;
+        this.scoreArray=[];
+         
     }
 
     draw(){
@@ -27,7 +29,6 @@ class Game{
         for(var i = 0; i < this.updateCycles; i++){
             this.ParkingspotManager.update()
             this.WallManager.update();
-         
             this.CarManager.update(keys);
             this.deepQCarManager.update(keys);
             
@@ -37,5 +38,7 @@ class Game{
     setUpdateCycles(n){
         this.updateCycles = n;
     }
+
+  
 
 }

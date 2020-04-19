@@ -9,6 +9,10 @@ var buttonLoad;
 var buttonQSave;
 var buttonQLoad;
 
+var saveScore;
+
+var GAMETICKSCOUNTER=0;
+
 function setup(){
     createCanvas(canvasWidth, canvasHeight);
     rectMode(CENTER);
@@ -23,6 +27,9 @@ function setup(){
     buttonQLoad =createFileInput(loadBestQ)
     buttonQSave.mousePressed(saveBestQ)
 
+    buttonSaveScore =createButton('saveScore')
+    buttonSaveScore.mousePressed(saveScore)
+  
     game = new Game(1,1);
 }
 
@@ -32,6 +39,7 @@ function draw(){
     game.update(keys);
     
     game.draw();
+    GAMETICKSCOUNTER++;
 }
 
 // input
@@ -72,7 +80,10 @@ function saveBestQ(){
 
 var objdataString=game.deepQCarManager.saveBestQCar()
 
-saveJSON(objdataString,'car.json');
+saveJSON(objdataString,'carQ.json');
 
 
 }
+function saveScore(){
+        saveJSON(game.scoreArray,'scores.json');
+    }

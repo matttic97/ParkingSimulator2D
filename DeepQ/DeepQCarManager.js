@@ -44,15 +44,6 @@ class DeepQCarManager{
         }
     }
 
-    
-    saveBestCar(){
-    return this.bestBrainsArray[0].copy();
-    }
-
-    loadBestCar(filedata){
-        this.loadedCarBrains=filedata
-        this.carLoaded=true;
-    }
 
     firstEpisode(position,carnumber){
     this.carsArray=[];
@@ -81,14 +72,13 @@ class DeepQCarManager{
     }
         
     saveBestQCar(){
-    return this.bestBrainsArray[0];
-
-
+   return this.bestBrainsArray[0];
     }
 
     loadBestQCar(filedata){
         this.loadedCarBrains=JSON.parse(filedata)
         this.loadedCarBrains[0]=NeuralNetwork_FF.deserialize(this.loadedCarBrains[0])
+        this.loadedCarBrains[1]=NeuralNetwork_FF.deserialize(this.loadedCarBrains[1])
         this.carLoaded=true;
     }
 
