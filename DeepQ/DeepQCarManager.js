@@ -68,6 +68,7 @@ class DeepQCarManager{
         this.carsArray=[]
         this.carIndex=0;
         this.spawnCars(new Vector2D(this.positionX,this.positionY))
+        this.gameObject.numberOfEpisodes++;
 
     }
         

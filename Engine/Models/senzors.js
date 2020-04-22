@@ -6,7 +6,8 @@ class Senzor extends CollidableSprite {
         this.color = color
         this.collidedObjName="none"
         this.gameObject = game;
-        this.intersaction = 0;
+        this.intersactionWall = 0;
+        this.intersactionParking = 0;
         this.sensorManager=sensorManager;
     }
 
@@ -50,7 +51,8 @@ class Senzor extends CollidableSprite {
     checkCollision(){
         this.collidedObjName="none"
         this.collided = false;
-        this.intersaction = 0;
+        this.intersactionWall = 0;
+        this.intersactionParking = 0;
         this.color="green"
         super.setCollider()
 
@@ -70,14 +72,12 @@ class Senzor extends CollidableSprite {
         this.collided = true;
         this.collidedObjName=withObj.objName
         if(withObj.objName=="parkingspot"){
-            this.intersaction = intersaction;
+            this.intersactionParking = intersaction;
             this.color = 'red';
-            this.sensorManager.objType=0;
         }
         else  if(withObj.objName == "wall"){
-            this.intersaction = intersaction;
+            this.intersactionWall = intersaction;
             this.color = 'red';
-            this.sensorManager.objType=1;
         }
             
     }
@@ -91,7 +91,6 @@ class Senzors {
         this.position = position;
         this.senzor_length = senzor_length;
         this.angle = angle;
-        this.objType=0;
         this.array = [
             new Senzor(this,'green', game, position, senzor_length, angle, new Vector2D(senzor_length, 0)),
             new Senzor(this,'green', game, position, senzor_length/2, angle, new Vector2D(-senzor_length/2, 0)),
@@ -103,7 +102,7 @@ class Senzors {
             new Senzor(this,'green', game, position, senzor_length/2, angle, new Vector2D(0, -senzor_length/2)),
         ];
 
-        this.inter_array = [[0,"none"], [0,"none"], [0,"none"], [0,"none"], [0,"none"], [0,"none"], [0,"none"], [0,"none"]];
+        this.inter_array = [[0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0]];
     }
 
     update(position, angle){
@@ -127,7 +126,8 @@ class Senzors {
         	this.array[i].checkCollision()
         }
 
-        this.array.map((senzor, i) => {this.inter_array[i][0] = senzor.intersaction / 1000;this.inter_array[i][1]=senzor.collidedObjName});
+        this.array.map((senzor, i) => {this.inter_array[i][0] = senzor.intersactionWall / 1000;this.inter_array[i][1]=senzor.intersactionParking/1000});
+      //  console.log(this.inter_array)
     }
     getSum(){
         var sum=0;

@@ -9,6 +9,8 @@ var buttonLoad;
 var buttonQSave;
 var buttonQLoad;
 
+var buttonCounter;
+
 var saveScore;
 
 var GAMETICKSCOUNTER=0;
@@ -37,9 +39,10 @@ function draw(){
     game.setUpdateCycles(slider.value());
     
     game.update(keys);
-    
     game.draw();
+
     GAMETICKSCOUNTER++;
+
 }
 
 // input

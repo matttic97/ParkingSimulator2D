@@ -34,7 +34,7 @@ class DeepQCar extends CollidableSprite {
         this.newObservation;
         this.done=false;
         this.currentReward=0;
-        this.brains = new DeepQBrains(this,12,6);
+        this.brains = new DeepQBrains(this,19,6);
         /*
         inputs: objekt na levo,desno,spredaj,zadaj in razdalja do najblizjega prostega parking spota.
         outputs: naprej nazaj levo desno stop
@@ -65,14 +65,13 @@ this.totalScore=0;
     	}
 
          this.pressedKey=keys;
-
-    var Xdistance=0.5+(this.gameObject.parkingspot.position.X-this.position.X)/(2*canvasWidth);
-    var Ydistance=0.5+(this.gameObject.parkingspot.position.Y-this.position.Y)/(2*canvasHeight); 
+    var Xdistance=(this.gameObject.parkingspot.position.X-this.position.X)/(2*canvasWidth);
+    var Ydistance=(this.gameObject.parkingspot.position.Y-this.position.Y)/(2*canvasHeight); 
+    var angleDiff=this.angle-Math.atan()
     this.newObservation= [
     		this.angle/360,
             Xdistance,
             Ydistance,
-            this.senzors.objType,
             this.senzors.inter_array[0][0],
             this.senzors.inter_array[1][0],
             this.senzors.inter_array[2][0],
@@ -81,6 +80,14 @@ this.totalScore=0;
             this.senzors.inter_array[5][0],
             this.senzors.inter_array[6][0],
             this.senzors.inter_array[7][0],
+            this.senzors.inter_array[0][1],
+            this.senzors.inter_array[1][1],
+            this.senzors.inter_array[2][1],
+            this.senzors.inter_array[3][1],
+            this.senzors.inter_array[4][1],
+            this.senzors.inter_array[5][1],
+            this.senzors.inter_array[6][1],
+            this.senzors.inter_array[7][1],
         ];
       
     }
@@ -134,8 +141,9 @@ this.totalScore=0;
     brainUpdate(){
     
     if (this.observation)this.brains.addToMemory(this.observation,this.action,this.newObservation,this.currentReward,this.done);
-        for(var i=0;i<2;i++){this.brains.train(this.done); if(this.done){this.gameObject.scoreArray.push(this.totalScore);this.totalScore=0;break;} }
-        this.observation=this.newObservation.slice();
+    this.brains.train(this.done); 
+    if(this.done){this.gameObject.scoreArray.push(this.totalScore);this.totalScore=0;}
+    this.observation=this.newObservation.slice();
 
 
     }
@@ -235,9 +243,9 @@ this.totalScore=0;
         // malo optimizacije dokler ne nardim quadThree-ja 
         if(this.senzors.getSum()> 0){
             this.checkCollisionWithOne(this.gameObject.WallManager.wallsArray); //za zide
-         this.checkCollisionWithOne(this.gameObject.ParkingspotManager.parkingspotsArray); //za parking spote
+        
         }
-          
+           this.checkCollisionWithOne(this.gameObject.ParkingspotManager.parkingspotsArray); //za parking spote
     }
 
 
@@ -258,13 +266,13 @@ this.totalScore=0;
         if(withObj.objName=="wall"){
   		this.stop();
         this.done=true;
-        this.currentReward-=30;
+        this.currentReward=-30;
         }
 
 
         if(withObj.objName=="parkingspot"){
         this.done=true;
-        this.currentReward+=200;
+        this.currentReward=15;
         }
     }
 
@@ -280,13 +288,13 @@ this.totalScore=0;
    
     //if((this.prevDistance-distance)==0)this.currentReward=-1000;
       //  this.currentReward+=(1-distance)*10
-    this.currentReward += (this.prevDistance-distance)*1000;
+    this.currentReward += (this.prevDistance-distance)*500;
    this.prevDistance=Vector2D.distance(this.position, this.gameObject.parkingspot.position)/canvasMaxPossibileDistance;
    // this.drivenDistance+=math.abs(this.speed);
 
     if(!((this.gameFrameCounter+1)%this.timeToCheck)){
 		
-this.currentReward-=20;
+this.currentReward-=1;
         this.done=true
 
 		//if((this.drivenDistance-this.prevDrivenDistance)<math.abs(this.maxspeed*this.timeToCheck/8)){this.drivable=false;}

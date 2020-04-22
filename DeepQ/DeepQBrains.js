@@ -7,24 +7,24 @@ class DeepQBrains{
 
 constructor(carObject,carInputs,carActions){
 
-this.learningRate=0.05; //še za implementirat
+this.learningRate=0.23; //še za implementirat
 this.exploration=1;
-this.minExploration=0.05;
-this.decay=0.005
-this.discount=0.9
+this.minExploration=0.01;
+this.decay=0.003
+this.discount=0.85
 ////////////////////////
 this.currentStep=0;
 this.actionslength=carActions
 
 //////////////////////
-this.policyNetwork= new NeuralNetwork_FF(carInputs,100,carActions,this.learningRate);
+this.policyNetwork= new NeuralNetwork_FF(carInputs,20,carActions,this.learningRate);
 this.targetNetwork= this.policyNetwork.copy();
 this.updateTargetCount=0;
-this.updateTargetAt=10;
+this.updateTargetAt=3;
 /////////////////////
-this.replayMemoryCapacity=30000;
+this.replayMemoryCapacity=20000;
 this.replayMmemory=[]
-this.miniBatchSize=64;
+this.miniBatchSize=32;
 this.replayMmemoryCount=0;
 
 this.carObject=carObject;
@@ -85,10 +85,10 @@ for (var i=0;i<len;i++){
 	Y.push(currentQs)
 }
 this.policyNetwork.trainArray(X,Y)
+
 if(lastState){
 	this.updateTargetCount++;
 	if(this.exploration>this.minExploration)this.exploration*=(1-this.decay);
-	//console.log(this.exploration+" "+this.carObject.totalScore)
 
 	
 }
@@ -107,14 +107,9 @@ this.updateTargetCount=0;
 
 addToMemory(...expiriences){
 var expirience=new Expirience(...expiriences)
-if (this.replayMmemoryCount<this.replayMemoryCapacity){
-this.replayMmemory.push(expirience)
-}
-else{
-this.replayMmemory[this.replayMmemoryCount%this.replayMemoryCapacity]=expirience;
-
-}
+this.replayMmemory[this.replayMmemoryCount]=expirience
 this.replayMmemoryCount++;
+if (this.replayMmemoryCount>=this.replayMemoryCapacity)this.replayMmemoryCount=0;
 }
 
 
@@ -130,11 +125,11 @@ else return false;
 }
 
 copy(){
-var arr=[this.policyNetwork.copy(),this.targetNetwork.copy(),JSON.parse(JSON.stringify(this.replayMmemory)),this.updateTargetCount,this.exploration,this.replayMmemoryCount]
+var arr=[this.policyNetwork.copy(),this.targetNetwork.copy(),JSON.parse(JSON.stringify(this.replayMmemory)),this.updateTargetCount,this.exploration,this.replayMmemoryCount,this.memoryCapacity]
 return arr
 }
 
-paste(policyNetwork,targetNetwork,memory,updateTargetCount,exploration,replayMmemoryCount){
+paste(policyNetwork,targetNetwork,memory,updateTargetCount,exploration,replayMmemoryCount,memoryCapacity){
 
 this.policyNetwork=policyNetwork.copy()
 this.targetNetwork=targetNetwork.copy()
@@ -143,6 +138,7 @@ this.replayMmemory=memory
 this.updateTargetCount=updateTargetCount;
 this.exploration=exploration;
 this.replayMmemoryCount=replayMmemoryCount
+this.replayMemoryCapacity=memoryCapacity
 
 }
 

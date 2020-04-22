@@ -9,10 +9,12 @@ class Game{
         this.deepQCarManager = new DeepQCarManager(this);
         this.MapManager = new MapManager(this)
         this.parkingspot=this.ParkingspotManager.createParkingspot(new Vector2D(900, 700), 0, true);
-       //this.CarManager.firstGeneration(new Vector2D(300, 100), 50,8,0.5);
+       this.CarManager.firstGeneration(new Vector2D(300, 100), 20,8,0.5);
        this.deepQCarManager.firstEpisode(new Vector2D(300, 150),1);
         this.updateCycles = updateCycles;
         this.scoreArray=[];
+        this.numberOfEpisodes=0;
+        this.numberOfGenerations=0;
          
     }
 
@@ -22,6 +24,9 @@ class Game{
         this.WallManager.draw();
         this.CarManager.draw();
         this.deepQCarManager.draw();
+        text(this.numberOfEpisodes,100,100)
+        text(this.numberOfGenerations,100,150)
+
        
     }
 
