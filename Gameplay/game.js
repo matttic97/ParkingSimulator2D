@@ -8,9 +8,9 @@ class Game{
         this.CarManager = new CarManager(this);
         this.deepQCarManager = new DeepQCarManager(this);
         this.MapManager = new MapManager(this)
-        this.parkingspot=this.ParkingspotManager.createParkingspot(new Vector2D(900, 700), 0, true);
-       this.CarManager.firstGeneration(new Vector2D(300, 100), 20,8,0.5);
-       this.deepQCarManager.firstEpisode(new Vector2D(300, 150),1);
+        this.parkingspot=this.ParkingspotManager.createParkingspot(new Vector2D(1000, 700), 0, true);
+        this.CarManager.firstGeneration(new Vector2D(300, 100), 10,40,0.5);
+        this.deepQCarManager.firstEpisode(new Vector2D(300, 150),1);
         this.updateCycles = updateCycles;
         this.scoreArray=[];
         this.numberOfEpisodes=0;

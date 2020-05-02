@@ -34,7 +34,7 @@ class Car extends CollidableSprite {
 
             this.brains=brains.copy()
         }
-        else this.brains = new NeuralNetwork_FF(19, 40, 5, 0.1);
+        else this.brains = new NeuralNetwork_FF(19, 30, 5, 0.1);
         /*
         inputs: objekt na levo,desno,spredaj,zadaj in razdalja do najblizjega prostega parking spota.
         outputs: naprej nazaj levo desno stop

@@ -30,7 +30,7 @@ class DeepQCar extends CollidableSprite {
         this.gameFrameCounter=0;
         this.brainsTimestapmArray=[];
         this.action=0;
-        this.observation=null;
+        this.observation=this.getObservation();
         this.newObservation;
         this.done=false;
         this.currentReward=0;
@@ -40,6 +40,34 @@ class DeepQCar extends CollidableSprite {
         outputs: naprej nazaj levo desno stop
 */
 this.totalScore=0;
+    }
+
+ 
+    getObservation(){
+   	var Xdistance=(this.gameObject.parkingspot.position.X-this.position.X)/(2*canvasWidth);
+    var Ydistance=(this.gameObject.parkingspot.position.Y-this.position.Y)/(2*canvasHeight); 
+    return [
+    		this.angle/360,
+            Xdistance,
+            Ydistance,
+            this.senzors.inter_array[0][0],
+            this.senzors.inter_array[1][0],
+            this.senzors.inter_array[2][0],
+            this.senzors.inter_array[3][0],
+            this.senzors.inter_array[4][0],
+            this.senzors.inter_array[5][0],
+            this.senzors.inter_array[6][0],
+            this.senzors.inter_array[7][0],
+            this.senzors.inter_array[0][1],
+            this.senzors.inter_array[1][1],
+            this.senzors.inter_array[2][1],
+            this.senzors.inter_array[3][1],
+            this.senzors.inter_array[4][1],
+            this.senzors.inter_array[5][1],
+            this.senzors.inter_array[6][1],
+            this.senzors.inter_array[7][1],
+        ];
+
     }
 
     think(keyss){
@@ -64,32 +92,8 @@ this.totalScore=0;
            
     	}
 
-         this.pressedKey=keys;
-    var Xdistance=(this.gameObject.parkingspot.position.X-this.position.X)/(2*canvasWidth);
-    var Ydistance=(this.gameObject.parkingspot.position.Y-this.position.Y)/(2*canvasHeight); 
-    var angleDiff=this.angle-Math.atan()
-    this.newObservation= [
-    		this.angle/360,
-            Xdistance,
-            Ydistance,
-            this.senzors.inter_array[0][0],
-            this.senzors.inter_array[1][0],
-            this.senzors.inter_array[2][0],
-            this.senzors.inter_array[3][0],
-            this.senzors.inter_array[4][0],
-            this.senzors.inter_array[5][0],
-            this.senzors.inter_array[6][0],
-            this.senzors.inter_array[7][0],
-            this.senzors.inter_array[0][1],
-            this.senzors.inter_array[1][1],
-            this.senzors.inter_array[2][1],
-            this.senzors.inter_array[3][1],
-            this.senzors.inter_array[4][1],
-            this.senzors.inter_array[5][1],
-            this.senzors.inter_array[6][1],
-            this.senzors.inter_array[7][1],
-        ];
-      
+    this.pressedKey=keys;
+    this.newObservation=this.getObservation();
     }
 
 
@@ -266,13 +270,13 @@ this.totalScore=0;
         if(withObj.objName=="wall"){
   		this.stop();
         this.done=true;
-        this.currentReward=-30;
+        this.currentReward=-10;
         }
 
 
         if(withObj.objName=="parkingspot"){
         this.done=true;
-        this.currentReward=15;
+        this.currentReward=10;
         }
     }
 
@@ -293,8 +297,6 @@ this.totalScore=0;
    // this.drivenDistance+=math.abs(this.speed);
 
     if(!((this.gameFrameCounter+1)%this.timeToCheck)){
-		
-this.currentReward-=1;
         this.done=true
 
 		//if((this.drivenDistance-this.prevDrivenDistance)<math.abs(this.maxspeed*this.timeToCheck/8)){this.drivable=false;}

@@ -97,7 +97,8 @@ class CarManager{
     this.carIndex=0;
     this.spawnCars(new Vector2D(this.positionX,this.positionY),this.numberOfCars);
 
-    this.gameObject.numberOfGenerations++;
+     if (this.numberOfCars)this.gameObject.numberOfGenerations++;
+
     }
     
     saveBestCar(){

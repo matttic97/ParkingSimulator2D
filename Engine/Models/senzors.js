@@ -73,7 +73,7 @@ class Senzor extends CollidableSprite {
         this.collidedObjName=withObj.objName
         if(withObj.objName=="parkingspot"){
             this.intersactionParking = intersaction;
-            this.color = 'red';
+            this.color = 'blue';
         }
         else  if(withObj.objName == "wall"){
             this.intersactionWall = intersaction;
