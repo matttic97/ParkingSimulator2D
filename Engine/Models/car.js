@@ -202,16 +202,24 @@ class Car extends CollidableSprite {
         this.collided=false
         super.setCollider()
         this.senzors.update(this.position, this.angle);
-        this.senzors.checkCollision();
-
-        // malo optimizacije dokler ne nardim quadThree-ja 
-        if(this.senzors.getSum()> 0){
-            this.checkCollisionWithOne(this.gameObject.WallManager.wallsArray); //za zide
-            this.checkCollisionWithOne(this.gameObject.ParkingspotManager.parkingspotsArray); //za parking spote
+        if(this.checkCircleCollsion()){ //checkCircleCollision še ne dela
+            this.senzors.checkCollision();
+          if(this.senzors.getSum()> 0){
+             this.checkCollisionWithOne(this.gameObject.WallManager.wallsArray); //za zide
+             this.checkCollisionWithOne(this.gameObject.ParkingspotManager.parkingspotsArray); //za parking spote
+          } 
         }
     }
 
-
+    checkCircleCollsion(){
+        var collided=false;
+        this.circleObj={x:this.position.X, y:this.position.Y, radius:50}
+        var len=this.gameObject.WallManager.wallsArray.length;
+        for(var i=0; i<len;i++){
+        if (Collider.Collision_Circle_vs_Rect(this.circleObj,  this.gameObject.WallManager.wallsArray[i]))  {collided=true}
+        }
+        return collided
+    }
 
     checkCollisionWithOne(colliders){
         var len=colliders.length;
@@ -224,7 +232,6 @@ class Car extends CollidableSprite {
     collisionEvent(withObj){
     	this.collided=true;
         this.color="white"
-
         if(withObj.objName=="wall"){
   		this.stop();
         this.drivable = false;

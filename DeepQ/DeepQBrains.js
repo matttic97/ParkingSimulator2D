@@ -7,24 +7,25 @@ class DeepQBrains{
 
 constructor(carObject,carInputs,carActions){
 
-this.learningRate=0.3; //še za implementirat
+this.learningRate=0.35; 
 this.exploration=1;
 this.minExploration=0.01;
-this.decay=0.004
+this.decay=0.01
 this.discount=0.9
 ////////////////////////
 this.currentStep=0;
-this.actionslength=carActions
+this.actionslength=carActions;
 
 //////////////////////
-this.policyNetwork= new NeuralNetwork_FF(carInputs,20,carActions,this.learningRate);
+this.policyNetwork= new NeuralNetwork_FF(carInputs,30,carActions,this.learningRate);
 this.targetNetwork= this.policyNetwork.copy();
 this.updateTargetCount=0;
-this.updateTargetAt=1;
+this.updateTargetAt=3;
 /////////////////////
 this.replayMemoryCapacity=30000;
+this.replayMemoryCapacityBorder=6000;
 this.replayMmemory=[]
-this.miniBatchSize=16;
+this.miniBatchSize=32;
 this.replayMmemoryCount=0;
 
 this.carObject=carObject;
@@ -109,7 +110,7 @@ addToMemory(...expiriences){
 var expirience=new Expirience(...expiriences)
 this.replayMmemory[this.replayMmemoryCount]=expirience
 this.replayMmemoryCount++;
-if (this.replayMmemoryCount>=this.replayMemoryCapacity)this.replayMmemoryCount=0;
+if (this.replayMmemoryCount>=this.replayMemoryCapacity)this.replayMmemoryCount=this.replayMemoryCapacityBorder;
 }
 
 

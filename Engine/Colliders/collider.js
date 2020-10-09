@@ -58,9 +58,23 @@ class Collider {
         return b.max - a.min
     }
 
-    static Collision_Circle_vs_Rect(a, b){
+    static Collision_Circle_vs_Rect(circle, rect){
 
-        return false;
+    var distx = Math.abs(circle.x - rect.position.X);
+    var disty = Math.abs(circle.y - rect.position.Y);
+
+    if (distx > (rect.size.X/2 + circle.radius)) { return false; }
+    if (disty > (rect.size.Y/2 + circle.radius)) { return false; }
+
+    if (distx <= (rect.size.X/2)) { return true; } 
+    if (disty <= (rect.size.Y/2)) { return true; }
+
+    var hypot = (distx - rect.size.X/2)*(distx- rect.size.X/2) +
+                         (disty - rect.size.Y/2)*(disty - rect.size.Y/2);
+
+//console.log(hypot <= (circle.radius*circle.radius))
+    return (hypot <= (circle.radius*circle.radius));
+   
     }
 
 

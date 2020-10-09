@@ -12,7 +12,7 @@ class Senzor extends CollidableSprite {
     }
 
     setCollider(){
-        this.setPoints();
+        
         this.setEdges();
     }
 
@@ -41,6 +41,7 @@ class Senzor extends CollidableSprite {
     update(position, angle){
         this.position = position;
         this.angle = angle;
+        this.setPoints();
     }
 
     draw(){
@@ -54,7 +55,7 @@ class Senzor extends CollidableSprite {
         this.intersactionWall = 0;
         this.intersactionParking = 0;
         this.color="green"
-        super.setCollider()
+       super.setCollider()
 
         this.checkCollisionWithOne(this.gameObject.WallManager.wallsArray); //za zide
         this.checkCollisionWithOne(this.gameObject.ParkingspotManager.parkingspotsArray); //za parking spote
