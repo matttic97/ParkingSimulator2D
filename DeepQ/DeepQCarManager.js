@@ -25,7 +25,7 @@ class DeepQCarManager{
             this.carsArray[i].update(keys)
             if (this.carsArray[i].drivable==false)disabedCars++;
        }
-       if (disabedCars>=this.numberOfCars) this.newEpisode();
+       if (disabedCars>=this.numberOfCars) this.newEpisodeOneDQ();
        
     }
 
@@ -71,7 +71,27 @@ class DeepQCarManager{
         if (this.numberOfCars)this.gameObject.numberOfEpisodes++;
 
     }
+
+    newEpisodeOneDQ(){
+
+ 
+        if(this.carLoaded){
+
+            this.bestBrainsArray[0]=this.loadedCarBrains;
+            this.carLoaded=false;
+        }
+        for(var i=0;i<this.carsArray.length;i++){
+        this.carsArray[i].position=new Vector2D(this.positionX,this.positionY)
+        this.carsArray[i].collided=false;
+        this.carsArray[i].done=false;
+        this.carsArray[i].drivable = true;
+        this.carsArray[i].currentReward=0;
+        this.carsArray[i].brains.currentStep=0;
+        }
         
+        if (this.numberOfCars)this.gameObject.numberOfEpisodes++;
+
+    }
     saveBestQCar(){
    return this.bestBrainsArray[0];
     }

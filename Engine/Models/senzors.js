@@ -73,11 +73,11 @@ class Senzor extends CollidableSprite {
         this.collided = true;
         this.collidedObjName=withObj.objName
         if(withObj.objName=="parkingspot"){
-            this.intersactionParking = intersaction;
+            this.intersactionParking = 1;//intersaction
             this.color = 'blue';
         }
         else  if(withObj.objName == "wall"){
-            this.intersactionWall = intersaction;
+            this.intersactionWall = 1;//intersaction
             this.color = 'red';
         }
             
@@ -126,14 +126,14 @@ class Senzors {
         for(var i=0;i<len;i++){
         	this.array[i].checkCollision()
         }
-
-        this.array.map((senzor, i) => {this.inter_array[i][0] = senzor.intersactionWall / 1000;this.inter_array[i][1]=senzor.intersactionParking/1000});
+        this.array.map((senzor, i) => {this.inter_array[i][0] = senzor.intersactionWall;this.inter_array[i][1]=senzor.intersactionParking});
+       // this.array.map((senzor, i) => {this.inter_array[i][0] = senzor.intersactionWall / 1000;this.inter_array[i][1]=senzor.intersactionParking/1000});
       //  console.log(this.inter_array)
     }
     getSum(){
         var sum=0;
         for(var i of this.inter_array){
-            sum+=i[0]
+            sum+=i[0]+i[1]
         }
         return sum;
 

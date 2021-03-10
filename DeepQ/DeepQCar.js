@@ -34,7 +34,7 @@ class DeepQCar extends CollidableSprite {
         this.newObservation;
         this.done=false;
         this.currentReward=0;
-        this.brains = new DeepQBrains(this,19,6);
+        this.brains = new DeepQBrains(this,18,6);
         /*
         inputs: objekt na levo,desno,spredaj,zadaj in razdalja do najblizjega prostega parking spota.
         outputs: naprej nazaj levo desno stop
@@ -44,10 +44,9 @@ this.totalScore=0;
 
  
     getObservation(){
-   	var Xdistance=(this.gameObject.parkingspot.position.X-this.position.X)/(2*canvasWidth);
-    var Ydistance=(this.gameObject.parkingspot.position.Y-this.position.Y)/(2*canvasHeight); 
-    return [
-    		this.angle/360,
+   	var Xdistance=(this.gameObject.parkingspot.position.X-this.position.X)/canvasWidth;
+    var Ydistance=(this.gameObject.parkingspot.position.Y-this.position.Y)/canvasHeight; 
+    var sendArr=[
             Xdistance,
             Ydistance,
             this.senzors.inter_array[0][0],
@@ -65,8 +64,11 @@ this.totalScore=0;
             this.senzors.inter_array[4][1],
             this.senzors.inter_array[5][1],
             this.senzors.inter_array[6][1],
-            this.senzors.inter_array[7][1],
-        ];
+            this.senzors.inter_array[7][1],]
+
+           // console.log(sendArr)
+    return sendArr
+
 
     }
 
@@ -77,16 +79,16 @@ this.totalScore=0;
   
         this.action=output;
         if(keyss["ArrowDown"]>0)this.action=0;
-         if(keyss["ArrowLeft"]>0)this.action=1;
-          if(keyss["ArrowRight"]>0)this.action=2;
-           if(keyss["ArrowUp"]>0)this.action=3;
+         if(keyss["ArrowLeft"]>0)this.action=2;
+          if(keyss["ArrowRight"]>0)this.action=3;
+           if(keyss["ArrowUp"]>0)this.action=1;
 
         var keys = {}
         switch (this.action){
         	case 0: keys['ArrowDown']=true;break;
        		case 1: keys['ArrowUp'] = true;break;
        		case 2: keys['ArrowUp'] = true;keys['ArrowLeft']=true;break;
-       		case 3: keys['ArrowUp'] = true;keys['ArrowRight']=true;break;
+       		case 3: keys['ArrowUp'] = true;keys['ArrowRight']=true; break;
        		case 4: keys['ArrowDown'] = true;keys['ArrowLeft']=true;break;
        		case 5: keys['ArrowDown'] = true;keys['ArrowRight']=true;break;
            
@@ -126,7 +128,7 @@ this.totalScore=0;
 
     carUpdate(keys){
 
-        this.currentReward=-1;
+        //this.currentReward+=1;
         this.updateScore();
         this.adjustSteerPower();
         this.move(keys);
@@ -136,7 +138,7 @@ this.totalScore=0;
         this.color = 'blue';
         this.checkCollision();   
         this.drivable=!this.done
-       // console.log(this.currentReward)
+        //console.log(this.currentReward)
         this.totalScore+=this.currentReward;
  
 
@@ -270,13 +272,13 @@ this.totalScore=0;
         if(withObj.objName=="wall"){
   		this.stop();
         this.done=true;
-        this.currentReward=-10;
+        this.currentReward-=2000;
         }
 
 
         if(withObj.objName=="parkingspot"){
         this.done=true;
-        this.currentReward=10;
+        this.currentReward+=5000;
         }
     }
 
@@ -291,13 +293,13 @@ this.totalScore=0;
   	var distance = Vector2D.distance(this.position, this.gameObject.parkingspot.position)/canvasMaxPossibileDistance;
    
     //if((this.prevDistance-distance)==0)this.currentReward=-1000;
-      //  this.currentReward+=(1-distance)*10
-    this.currentReward += (this.prevDistance-distance)*500;
+    //this.currentReward+=(1-distance)*0.001
+    this.currentReward += (Math.abs(this.prevDistance-distance))*0.1;
    this.prevDistance=Vector2D.distance(this.position, this.gameObject.parkingspot.position)/canvasMaxPossibileDistance;
    // this.drivenDistance+=math.abs(this.speed);
 
     if(!((this.gameFrameCounter+1)%this.timeToCheck)){
-        this.done=true
+        //this.done=true
 
 		//if((this.drivenDistance-this.prevDrivenDistance)<math.abs(this.maxspeed*this.timeToCheck/8)){this.drivable=false;}
 		//this.prevDrivenDistance=this.drivenDistance;   	

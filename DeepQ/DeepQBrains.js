@@ -7,25 +7,25 @@ class DeepQBrains{
 
 constructor(carObject,carInputs,carActions){
 
-this.learningRate=0.35; 
+this.learningRate=0.4; 
 this.exploration=1;
 this.minExploration=0.01;
-this.decay=0.01
-this.discount=0.9
+this.decay=0.005
+this.discount=0.99
 ////////////////////////
 this.currentStep=0;
 this.actionslength=carActions;
 
 //////////////////////
-this.policyNetwork= new NeuralNetwork_FF(carInputs,30,carActions,this.learningRate);
+this.policyNetwork= new NeuralNetwork_FF(carInputs,15,carActions,this.learningRate);
 this.targetNetwork= this.policyNetwork.copy();
 this.updateTargetCount=0;
 this.updateTargetAt=3;
 /////////////////////
-this.replayMemoryCapacity=30000;
-this.replayMemoryCapacityBorder=6000;
+this.replayMemoryCapacity=50000;
+this.replayMemoryCapacityBorder=10;
 this.replayMmemory=[]
-this.miniBatchSize=32;
+this.miniBatchSize=64;
 this.replayMmemoryCount=0;
 
 this.carObject=carObject;
