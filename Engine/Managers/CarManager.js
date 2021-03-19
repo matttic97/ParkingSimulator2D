@@ -98,7 +98,7 @@ class CarManager{
     this.spawnCars(new Vector2D(this.positionX,this.positionY),this.numberOfCars);
 
      if (this.numberOfCars)this.gameObject.numberOfGenerations++;
-     if(this.gameObject.numberOfGenerations%50==0)this.gameObject.parkingspot.position= new Vector2D(Math.ceil(Math.random()*canvasWidth),Math.ceil(Math.random()*canvasHeight))
+     if(this.gameObject.numberOfGenerations%50==0 && this.numberOfCars)this.gameObject.parkingspot.position= new Vector2D(Math.ceil(Math.random()*canvasWidth),Math.ceil(Math.random()*canvasHeight))
 
     }
     

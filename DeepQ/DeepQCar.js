@@ -34,7 +34,7 @@ class DeepQCar extends CollidableSprite {
         this.newObservation;
         this.done=false;
         this.currentReward=0;
-        this.brains = new DeepQBrains(this,18,6);
+        this.brains = new DeepQBrains(this,19,6);
         /*
         inputs: objekt na levo,desno,spredaj,zadaj in razdalja do najblizjega prostega parking spota.
         outputs: naprej nazaj levo desno stop
@@ -47,6 +47,7 @@ this.totalScore=0;
    	var Xdistance=(this.gameObject.parkingspot.position.X-this.position.X)/canvasWidth;
     var Ydistance=(this.gameObject.parkingspot.position.Y-this.position.Y)/canvasHeight; 
     var sendArr=[
+            this.angle/360,
             Xdistance,
             Ydistance,
             this.senzors.inter_array[0][0],
@@ -87,7 +88,7 @@ this.totalScore=0;
         switch (this.action){
         	case 0: keys['ArrowDown']=true;break;
        		case 1: keys['ArrowUp'] = true;break;
-       		case 2: keys['ArrowUp'] = true;keys['ArrowLeft']=true;break;
+       		case 2: keys['ArrowUp'] = true;keys['ArrowLeft']=true;;break;
        		case 3: keys['ArrowUp'] = true;keys['ArrowRight']=true; break;
        		case 4: keys['ArrowDown'] = true;keys['ArrowLeft']=true;break;
        		case 5: keys['ArrowDown'] = true;keys['ArrowRight']=true;break;
@@ -116,10 +117,10 @@ this.totalScore=0;
     update(keys){
     
         if(!this.drivable)return;
-        if(!(this.gameFrameCounter%3))this.think(keys);
+        if(!(this.gameFrameCounter%10))this.think(keys);
         
         this.carUpdate(this.pressedKey); //določi se reward
-        if(!(this.gameFrameCounter%3)||this.done){this.brainUpdate();}//reward se samodejno notri vkljucu
+        if(!(this.gameFrameCounter%10)||this.done){this.brainUpdate();}//reward se samodejno notri vkljucu
         this.gameFrameCounter++;
 
        
@@ -128,7 +129,7 @@ this.totalScore=0;
 
     carUpdate(keys){
 
-        //this.currentReward+=1;
+  
         this.updateScore();
         this.adjustSteerPower();
         this.move(keys);
@@ -272,13 +273,13 @@ this.totalScore=0;
         if(withObj.objName=="wall"){
   		this.stop();
         this.done=true;
-        this.currentReward-=2000;
+        this.currentReward-=5000;
         }
 
 
         if(withObj.objName=="parkingspot"){
         this.done=true;
-        this.currentReward+=5000;
+        this.currentReward+=50000;
         }
     }
 
@@ -294,7 +295,7 @@ this.totalScore=0;
    
     //if((this.prevDistance-distance)==0)this.currentReward=-1000;
     //this.currentReward+=(1-distance)*0.001
-    this.currentReward += (Math.abs(this.prevDistance-distance))*0.1;
+    this.currentReward += (this.prevDistance-distance)*0.5;
    this.prevDistance=Vector2D.distance(this.position, this.gameObject.parkingspot.position)/canvasMaxPossibileDistance;
    // this.drivenDistance+=math.abs(this.speed);
 

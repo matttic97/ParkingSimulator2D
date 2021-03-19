@@ -84,7 +84,7 @@ for (var i=0;i<len;i++){
 	X.push(miniBatch[i].state)
 	Y.push(currentQs)
 }
-this.policyNetwork.trainArray(X,Y)
+this.policyNetwork.trainBatch(X,Y)
 
 if(lastState){
 	this.updateTargetCount++;

@@ -145,6 +145,71 @@ class NeuralNetwork_FF {
         this.bias_hidden.add(hidden_gradients);
     }
 
+
+    trainBatch (X, Y) {
+        var updateto_ih = new Matrix(this.hidden_nodes, this.input_nodes);
+        var updateto_ho = new Matrix(this.output_nodes, this.hidden_nodes);
+        var updateto_bh = new Matrix(this.hidden_nodes, 1);
+        var updateto_bo = new Matrix(this.output_nodes, 1);
+        var len =X.length;
+        for(var idx=0;idx<len;idx++)
+        {
+        var inputs=X[idx];
+        var targets_raw=Y[idx]
+        // predict
+        var output = this.feedforward(inputs);
+        var hidden = output.hidden;
+        var outputs = output.output;
+        var targets = Matrix.fromArray(targets_raw);
+        targets.map(sigmoid);
+        outputs.map(sigmoid);
+
+        // calculate output gradients
+        var output_errors = Matrix.subtract(targets, outputs);
+        var output_gradients = calculateGradients(outputs, derivative_sigmoid, output_errors, this.learning_rate);
+
+        // adjust the weights by deltas
+        var ho_deltas = calculateDeltas(output_gradients, hidden);
+        
+        
+        
+       
+        updateto_ho.add(ho_deltas);   
+        // calculate hidden layer gradients
+        var weight_hoT = Matrix.transpose(Matrix.adding(this.weights_ho,ho_deltas));
+        var hidden_errors = Matrix.multiply(weight_hoT, output_errors);
+        var hidden_gradients = calculateGradients(hidden, derivative_sigmoid, hidden_errors, this.learning_rate);
+       
+        // adjust the weights by deltas
+        var ih_deltas = calculateDeltas(hidden_gradients, Matrix.fromArray(inputs));
+    
+        updateto_ih.add(ih_deltas);
+        // adjust the biases by gradients
+
+      
+        updateto_bo.add(output_gradients);
+        updateto_bh.add(hidden_gradients);
+        }
+        this.weights_ih.add(updateto_ih);
+        this.bias_output.add(updateto_bo);
+        this.bias_hidden.add(updateto_bh);
+        this.weights_ho.add(ho_deltas)
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     copy() {
         return new NeuralNetwork_FF(this);
     }
